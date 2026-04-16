@@ -92,15 +92,21 @@ h2 {
     font-size: 1.05em;
 }
 
-.entry p {
-    margin: 6px 0;
-    line-height: 1.4;
-    word-wrap: break-word;
+.entry {
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+
+    background: rgba(20, 15, 10, 0.6);
+    backdrop-filter: blur(4px);
 }
 
 small {
-    color: #aaa;
+    color: rgba(255, 200, 120, 0.75);
     font-size: 0.85em;
+    display: block;
+    margin-top: 2px;
 }
 
 #form {
@@ -177,18 +183,23 @@ button:disabled {
 <body>
 
 <div class="guestbook-container">
-    <h2>📖 Tavern Guestbook</h2>
+    <h2>📖 Guestbook</h2>
     
     <div id="entries"></div>
     
     <form id="form">
         <div class="error" id="errorMsg"></div>
         
-        <input name="name" placeholder="Adventurer Name" required>
-        <textarea name="message" placeholder="Leave your mark..." required></textarea>
-
+        <input name="name" placeholder="May Springflower @ World" required>
+        <textarea name="message" placeholder="A gil for your thoughts? Perhaps?" required maxlength="350"></textarea>
+        <div id="charCount" style="font-size:0.8em;color:#aaa;text-align:right;">0 / 350</div>
         <input type="text" name="website" style="position:absolute;left:-9999px;top:-9999px;">
-
+        <script>
+            const textarea = document.querySelector('textarea[name="message"]');
+            const counter = document.getElementById('charCount');
+            textarea.addEventListener('input', () => {
+            counter.textContent = `${textarea.value.length} / 350`;});
+        </script>
         <div class="cf-turnstile" data-sitekey="<?= $config['turnstile_site'] ?>"></div>
 
         <button type="submit" id="submitBtn">Sign the Book</button>
