@@ -42,7 +42,6 @@ h2 {
     scroll-behavior: smooth;
 }
 
-/* Only show scrollbar when needed */
 #entries::-webkit-scrollbar {
     width: 8px;
 }
@@ -60,7 +59,6 @@ h2 {
     background: #ffc966;
 }
 
-/* Firefox scrollbar */
 #entries {
     scrollbar-color: #ffb347 transparent;
     scrollbar-width: thin;
@@ -68,7 +66,11 @@ h2 {
 
 .entry {
     border-top: 1px solid rgba(255,255,255,0.2);
-    padding: 12px 0;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: rgba(20, 15, 10, 0.6);
+    backdrop-filter: blur(4px);
     animation: fadeIn 0.3s ease-in;
 }
 
@@ -90,16 +92,6 @@ h2 {
 .entry strong {
     color: #ffb347;
     font-size: 1.05em;
-}
-
-.entry {
-    border-top: 1px solid rgba(255,255,255,0.2);
-    padding: 12px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-
-    background: rgba(20, 15, 10, 0.6);
-    backdrop-filter: blur(4px);
 }
 
 small {
@@ -190,9 +182,10 @@ button:disabled {
     <form id="form">
         <div class="error" id="errorMsg"></div>
         
-        <input name="name" placeholder="May Springflower @ World" required>
-        <textarea name="message" placeholder="A gil for your thoughts? Perhaps?" required maxlength="350"></textarea>
+        <input name="name" placeholder="May Springflower @ World" required minlength="2" maxlength="100">
+        <textarea name="message" placeholder="A gil for your thoughts? Perhaps?" required minlength="10" maxlength="350"></textarea>
         <div id="charCount" style="font-size:0.8em;color:#aaa;text-align:right;">0 / 350</div>
+        <input type="hidden" name="csrf_token" id="csrfToken">
         <input type="text" name="website" style="position:absolute;left:-9999px;top:-9999px;">
         <script>
             const textarea = document.querySelector('textarea[name="message"]');
@@ -216,72 +209,110 @@ document.addEventListener('DOMContentLoaded', () => {
     let isLoading = false;
     let resizeTimeout;
     let newestEntryId = null;
-    async function checkForNewEntries() {
-    try {
-        const res = await fetch(`${API}?action=list`);
-        const data = await res.json();
 
-        if (!data.length) return;
+    async function initializeCsrfToken() {
+        try {
+            const res = await fetch(`${API}?action=list`);
+            if (!res.ok) return;
+            
+            const data = await res.json();
+            if (!Array.isArray(data)) return;
 
-        const latestId = data[0].id;
-
-        if (latestId !== newestEntryId) {
-            const newEntries = data.filter(e => e.id > newestEntryId);
-
-            if (newEntries.length > 0) {
-                prependEntries(newEntries);
-                newestEntryId = latestId;
+            // Try to get CSRF from meta tag or document cookie
+            const metaTag = document.querySelector('meta[name="csrf-token"]');
+            if (metaTag) {
+                document.getElementById('csrfToken').value = metaTag.content;
             }
+        } catch (err) {
+            console.warn('CSRF initialization skipped, will use session-based token');
         }
-
-    } catch (err) {
-        console.error('Realtime check failed:', err);
     }
-}
+
+    async function checkForNewEntries() {
+        try {
+            const res = await fetch(`${API}?action=list`);
+            if (!res.ok) return;
+            
+            const data = await res.json();
+            if (!Array.isArray(data) || !data.length) return;
+
+            const latestId = data[0].id;
+
+            if (latestId !== newestEntryId) {
+                const newEntries = data.filter(e => e.id > (newestEntryId || 0));
+
+                if (newEntries.length > 0) {
+                    prependEntries(newEntries);
+                    newestEntryId = latestId;
+                }
+            }
+
+        } catch (err) {
+            console.error('Realtime check failed:', err);
+        }
+    }
+
     async function loadAllEntries() {
         try {
             if (allEntries.length > 0) {
-            newestEntryId = allEntries[0].id;
+                newestEntryId = allEntries[0].id;
             }    
             const res = await fetch(`${API}?action=list`);
             if (!res.ok) throw new Error('Failed to load entries');
             
-            allEntries = await res.json();
+            const data = await res.json();
+            if (!Array.isArray(data)) throw new Error('Invalid response format');
+            
+            allEntries = data;
             displayedEntries = 0;
             
             const container = document.getElementById('entries');
             container.innerHTML = '';
             
+            if (allEntries.length > 0) {
+                newestEntryId = allEntries[0].id;
+            }
+
             loadMoreEntries();
             setupIntersectionObserver();
         } catch (error) {
             console.error('Error loading entries:', error);
         }
     }
+
     function prependEntries(entries) {
-    const container = document.getElementById('entries');
+        const container = document.getElementById('entries');
 
-    const isAtTop = container.scrollTop < 50;
+        const isAtTop = container.scrollTop < 50;
 
-    entries.reverse().forEach(e => {
-        const entryEl = document.createElement('div');
-        entryEl.className = 'entry';
+        entries.reverse().forEach(e => {
+            const entryEl = document.createElement('div');
+            entryEl.className = 'entry';
 
-        entryEl.innerHTML = `
-            <strong>${e.name}</strong><br>
-            <small>${e.created_at}</small>
-            <p>${e.message}</p>
-        `;
+            const name = document.createElement('strong');
+            name.textContent = e.name;
 
-        container.prepend(entryEl);
-    });
+            const date = document.createElement('small');
+            date.textContent = e.created_at;
 
-    if (isAtTop) {
-        container.scrollTop = 0;
+            const msg = document.createElement('p');
+            msg.textContent = e.message;
+
+            entryEl.appendChild(name);
+            entryEl.appendChild(document.createElement('br'));
+            entryEl.appendChild(date);
+            entryEl.appendChild(msg);
+
+            container.prepend(entryEl);
+        });
+
+        if (isAtTop) {
+            container.scrollTop = 0;
+        }
+
+        resize();
     }
 
-    resize();
-}
     function loadMoreEntries() {
         if (isLoading || displayedEntries >= allEntries.length) return;
         
@@ -318,9 +349,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function setupIntersectionObserver() {
-        // Create a sentinel at the bottom to trigger load
         const oldSentinel = document.getElementById('sentinel');
         if (oldSentinel) oldSentinel.remove();
+        
         const container = document.getElementById('entries');
         const sentinel = document.createElement('div');
         sentinel.id = 'sentinel';
@@ -348,24 +379,29 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const formData = new FormData(e.target);
+            
             const res = await fetch(`${API}?action=sign`, {
                 method: 'POST',
                 body: formData
             });
-            
-            if (!res.ok) throw new Error('Network error');
             
             const result = await res.json();
             
             if (result.error) {
                 errorDiv.textContent = result.error;
                 errorDiv.classList.add('show');
-            } else {
+            } else if (result.success) {
                 e.target.reset();
-                if (window.turnstile && typeof turnstile.reset === 'function') {
-                    turnstile.reset();
+                document.getElementById('charCount').textContent = '0 / 350';
+                
+                if (window.turnstile && typeof window.turnstile.reset === 'function') {
+                    window.turnstile.reset();
                 }
+                
                 await loadAllEntries();
+            } else {
+                errorDiv.textContent = 'Unexpected response. Please try again.';
+                errorDiv.classList.add('show');
             }
         } catch (error) {
             errorDiv.textContent = 'Failed to submit. Please try again.';
@@ -375,17 +411,26 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = false;
         }
     });
+
     function resize() {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        window.parent.postMessage({ 
-            guestbookHeight: document.body.scrollHeight 
-        }, "*");
-    }, 250);
-}
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            try {
+                if (window.parent !== window) {
+                    window.parent.postMessage({ 
+                        guestbookHeight: document.body.scrollHeight 
+                    }, window.location.origin);
+                }
+            } catch (e) {
+                console.warn('postMessage failed:', e);
+            }
+        }, 250);
+    }
+
+    initializeCsrfToken();
     loadAllEntries();
     window.addEventListener('resize', resize);
-    setInterval(checkForNewEntries, 5000); // every 5s
+    setInterval(checkForNewEntries, 5000);
 });
 </script>
 
