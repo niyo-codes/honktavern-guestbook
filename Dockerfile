@@ -1,5 +1,4 @@
-FROM php:7.4-apache
-
+FROM richarvey/nginx-php-fpm:latest
 # Install PostgreSQL libraries
 RUN apt-get update && \
     apt-get install -y \
@@ -11,4 +10,6 @@ RUN apt-get update && \
 # Other necessary instructions
 
 # Copy your other application files
-COPY . .
+COPY . /var/www/html
+WORKDIR /var/www/html
+RUN composer install --no-dev
