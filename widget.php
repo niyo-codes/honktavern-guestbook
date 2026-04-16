@@ -1,6 +1,5 @@
 <?php 
     const API = 'api.php';
-    let newestEntryId = null;
     $config = require __DIR__ . '/config.php'; 
 ?>
 <!DOCTYPE html>
@@ -209,12 +208,14 @@ button:disabled {
 </div>
 
 <script>
+
 document.addEventListener('DOMContentLoaded', () => {
     const ENTRIES_PER_PAGE = 5;
     let allEntries = [];
     let displayedEntries = 0;
     let isLoading = false;
     let resizeTimeout;
+    let newestEntryId = null;
     async function checkForNewEntries() {
     try {
         const res = await fetch(`${API}?action=list`);
