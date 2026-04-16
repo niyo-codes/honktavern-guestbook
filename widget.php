@@ -1,6 +1,5 @@
 <?php 
-    const API = 'api.php';
-    $config = require __DIR__ . '/config.php'; 
+        $config = require __DIR__ . '/config.php'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -210,6 +209,7 @@ button:disabled {
 <script>
 
 document.addEventListener('DOMContentLoaded', () => {
+    const API = 'api.php';
     const ENTRIES_PER_PAGE = 5;
     let allEntries = [];
     let displayedEntries = 0;
