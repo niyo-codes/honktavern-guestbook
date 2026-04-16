@@ -11,4 +11,4 @@ RUN apt-get update && \
 # Other necessary instructions
 
 # Copy your other application files
-COPY . /var/www/html/
+COPY . .
