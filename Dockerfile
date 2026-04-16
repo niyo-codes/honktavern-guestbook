@@ -13,5 +13,3 @@ WORKDIR /app
 # Copy application files
 COPY . .
 
-# Default command
-CMD ["php", "-S", "localhost:8000"]
