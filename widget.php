@@ -47,16 +47,7 @@ small {
 
 <h2>📖 Tavern Guestbook</h2>
 
-<form id="form">
-    <input name="name" placeholder="Adventurer Name" required>
-    <textarea name="message" placeholder="Leave your mark..." required></textarea>
 
-    <input type="text" name="website" style="display:none">
-
-    <div class="cf-turnstile" data-sitekey="<?= $config['turnstile_site'] ?>"></div>
-
-    <button>Sign the Book</button>
-</form>
 
 <div id="entries"></div>
 
@@ -108,6 +99,15 @@ function resize() {
 window.onload = loadEntries;
 window.onresize = resize;
 </script>
+<form id="form">
+    <input name="name" placeholder="Adventurer Name" required>
+    <textarea name="message" placeholder="Leave your mark..." required></textarea>
 
+    <input type="text" name="website" style="display:none">
+
+    <div class="cf-turnstile" data-sitekey="<?= $config['turnstile_site'] ?>"></div>
+
+    <button>Sign the Book</button>
+</form>
 </body>
 </html>
