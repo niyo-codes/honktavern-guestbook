@@ -1,6 +1,6 @@
 FROM php:7.4-apache
 
-# Install system dependencies required for Composer and extensions
+# Install system dependencies
 RUN apt-get update && \
     apt-get install -y \
     libpq-dev \
@@ -16,12 +16,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy Composer files first to leverage Docker layer caching
-COPY composer.json composer.json
-COPY composer.lock composer.lock
+# Copy only composer.json (if composer.lock doesn't exist locally)
+COPY composer.json ./
 
 # Install PHP dependencies
+# This will generate composer.lock if it doesn't exist
 RUN composer install --no-dev --optimize-autoloader
 
-# Copy your application files
-COPY . /var/www/html/   
+# Copy the rest of your application files
+COPY . /var/www/html/
