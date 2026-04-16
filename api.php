@@ -24,10 +24,10 @@ if ($action === 'sign') {
         exit;
     }
 
-    if (strlen($name) > 100 || strlen($message) > 1000) {
-        echo json_encode(['error' => 'Too long']);
-        exit;
-    }
+    if (strlen($message) < 100 || strlen($message) > 350) {
+    echo json_encode(['error' => 'Message too long (max 350 characters)']);
+    exit;
+}
 
     // Honeypot
     if (!empty($_POST['website'])) {
