@@ -1,4 +1,6 @@
-<?php $config = require __DIR__ . '/config.php'; ?>
+<?php 
+    $config = require __DIR__ . '/config.php'; 
+?>
 <!DOCTYPE html>
 <html>
 <head>
