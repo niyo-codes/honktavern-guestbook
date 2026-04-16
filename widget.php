@@ -196,131 +196,133 @@ button:disabled {
 </div>
 
 <script>
-const ENTRIES_PER_PAGE = 5;
-let allEntries = [];
-let displayedEntries = 0;
-let isLoading = false;
-let resizeTimeout;
-
-async function loadAllEntries() {
-    try {
-        const res = await fetch('api.php?action=list');
-        if (!res.ok) throw new Error('Failed to load entries');
-        
-        allEntries = await res.json();
-        displayedEntries = 0;
-        
-        const container = document.getElementById('entries');
-        container.innerHTML = '';
-        
-        loadMoreEntries();
-        setupIntersectionObserver();
-    } catch (error) {
-        console.error('Error loading entries:', error);
-    }
-}
-
-function loadMoreEntries() {
-    if (isLoading || displayedEntries >= allEntries.length) return;
+document.addEventListener('DOMContentLoaded', () => {
+    const ENTRIES_PER_PAGE = 5;
+    let allEntries = [];
+    let displayedEntries = 0;
+    let isLoading = false;
+    let resizeTimeout;
     
-    isLoading = true;
-    const container = document.getElementById('entries');
-    const startIdx = displayedEntries;
-    const endIdx = Math.min(displayedEntries + ENTRIES_PER_PAGE, allEntries.length);
-    
-    for (let i = startIdx; i < endIdx; i++) {
-        const e = allEntries[i];
-        const entryEl = document.createElement('div');
-        entryEl.className = 'entry';
-        
-        const name = document.createElement('strong');
-        name.textContent = e.name;
-        
-        const date = document.createElement('small');
-        date.textContent = e.created_at;
-        
-        const msg = document.createElement('p');
-        msg.textContent = e.message;
-        
-        entryEl.appendChild(name);
-        entryEl.appendChild(document.createElement('br'));
-        entryEl.appendChild(date);
-        entryEl.appendChild(msg);
-        
-        container.appendChild(entryEl);
-    }
-    
-    displayedEntries = endIdx;
-    isLoading = false;
-    resize();
-}
-
-function setupIntersectionObserver() {
-    // Create a sentinel at the bottom to trigger load
-    const container = document.getElementById('entries');
-    const sentinel = document.createElement('div');
-    sentinel.id = 'sentinel';
-    container.appendChild(sentinel);
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && displayedEntries < allEntries.length) {
-                loadMoreEntries();
-            }
-        });
-    }, { root: container, rootMargin: '100px' });
-    
-    observer.observe(sentinel);
-}
-
-document.getElementById('form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const btn = document.getElementById('submitBtn');
-    const errorDiv = document.getElementById('errorMsg');
-    
-    btn.disabled = true;
-    errorDiv.classList.remove('show');
-    
-    try {
-        const formData = new FormData(e.target);
-        const res = await fetch('api.php?action=sign', {
-            method: 'POST',
-            body: formData
-        });
-        
-        if (!res.ok) throw new Error('Network error');
-        
-        const result = await res.json();
-        
-        if (result.error) {
-            errorDiv.textContent = result.error;
-            errorDiv.classList.add('show');
-        } else {
-            e.target.reset();
-            if (window.turnstile) window.turnstile.reset();
-            await loadAllEntries();
+    async function loadAllEntries() {
+        try {
+            const res = await fetch('api.php?action=list');
+            if (!res.ok) throw new Error('Failed to load entries');
+            
+            allEntries = await res.json();
+            displayedEntries = 0;
+            
+            const container = document.getElementById('entries');
+            container.innerHTML = '';
+            
+            loadMoreEntries();
+            setupIntersectionObserver();
+        } catch (error) {
+            console.error('Error loading entries:', error);
         }
-    } catch (error) {
-        errorDiv.textContent = 'Failed to submit. Please try again.';
-        errorDiv.classList.add('show');
-        console.error('Submit error:', error);
-    } finally {
-        btn.disabled = false;
     }
+    
+    function loadMoreEntries() {
+        if (isLoading || displayedEntries >= allEntries.length) return;
+        
+        isLoading = true;
+        const container = document.getElementById('entries');
+        const startIdx = displayedEntries;
+        const endIdx = Math.min(displayedEntries + ENTRIES_PER_PAGE, allEntries.length);
+        
+        for (let i = startIdx; i < endIdx; i++) {
+            const e = allEntries[i];
+            const entryEl = document.createElement('div');
+            entryEl.className = 'entry';
+            
+            const name = document.createElement('strong');
+            name.textContent = e.name;
+            
+            const date = document.createElement('small');
+            date.textContent = e.created_at;
+            
+            const msg = document.createElement('p');
+            msg.textContent = e.message;
+            
+            entryEl.appendChild(name);
+            entryEl.appendChild(document.createElement('br'));
+            entryEl.appendChild(date);
+            entryEl.appendChild(msg);
+            
+            container.appendChild(entryEl);
+        }
+        
+        displayedEntries = endIdx;
+        isLoading = false;
+        resize();
+    }
+    
+    function setupIntersectionObserver() {
+        // Create a sentinel at the bottom to trigger load
+        const container = document.getElementById('entries');
+        const sentinel = document.createElement('div');
+        sentinel.id = 'sentinel';
+        container.appendChild(sentinel);
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && displayedEntries < allEntries.length) {
+                    loadMoreEntries();
+                }
+            });
+        }, { root: container, rootMargin: '100px' });
+        
+        observer.observe(sentinel);
+    }
+    
+    document.getElementById('form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        const errorDiv = document.getElementById('errorMsg');
+        
+        btn.disabled = true;
+        errorDiv.classList.remove('show');
+        
+        try {
+            const formData = new FormData(e.target);
+            const res = await fetch('api.php?action=sign', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!res.ok) throw new Error('Network error');
+            
+            const result = await res.json();
+            
+            if (result.error) {
+                errorDiv.textContent = result.error;
+                errorDiv.classList.add('show');
+            } else {
+                e.target.reset();
+                if (window.turnstile) window.turnstile.reset();
+                await loadAllEntries();
+            }
+        } catch (error) {
+            errorDiv.textContent = 'Failed to submit. Please try again.';
+            errorDiv.classList.add('show');
+            console.error('Submit error:', error);
+        } finally {
+            btn.disabled = false;
+        }
+    });
+    
+    function resize() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            window.parent.postMessage({ 
+                guestbookHeight: document.body.scrollHeight 
+            }, "*");
+        }, 250);
+    }
+    
+    loadAllEntries();
+    window.addEventListener('resize', resize);
 });
-
-function resize() {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        window.parent.postMessage({ 
-            guestbookHeight: document.body.scrollHeight 
-        }, "*");
-    }, 250);
-}
-
-window.addEventListener('load', loadAllEntries);
-window.addEventListener('resize', resize);
 </script>
 
 </body>
