@@ -1,0 +1,18 @@
+services:
+  honktavern-guestbook:
+    type: web
+    env: php
+    name: honktavern-guestbook
+    buildCommand: composer install
+    startCommand: php -S 0.0.0.0:8000
+    plan: free
+    envVars:
+      DATABASE_URL: ${guestbook-db.database_url}
+
+  guestbook-db:
+    type: db
+    name: guestbook-db
+    plan: free
+    env:
+      - name: DATABASE_URL
+        value: postgres://USER:PASSWORD@localhost:5432/DBNAME
