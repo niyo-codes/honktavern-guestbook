@@ -14,3 +14,5 @@ COPY . /var/www/html
 WORKDIR /var/www/html
 
 RUN composer install --no-dev
+
+CMD ["php", "-S", "0.0.0.0:10000", "-t", "public"]
