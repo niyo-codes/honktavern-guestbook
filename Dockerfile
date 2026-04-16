@@ -1,16 +1,14 @@
-FROM php:8.2-cli
+FROM php:7.4-apache
 
-# Update package list and install dependencies
-RUN apt-get update && apt-get install -y \
-    sqlite3 \
-    libsqlite3-dev \
-    && docker-php-ext-install pdo pdo_sqlite \
+# Install PostgreSQL libraries
+RUN apt-get update && \
+    apt-get install -y \
+    libpq-dev \
+    && docker-php-ext-install pgsql pdo_pgsql \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /app
+# Other necessary instructions
 
-# Copy application files
-COPY . .
-
-CMD ["php", "-S", "0.0.0.0:8000"]
+# Copy your other application files
+COPY . /var/www/html/
