@@ -1,4 +1,6 @@
 <?php 
+    const API = 'api.php';
+    let newestEntryId = null;
     $config = require __DIR__ . '/config.php'; 
 ?>
 <!DOCTYPE html>
@@ -213,10 +215,34 @@ document.addEventListener('DOMContentLoaded', () => {
     let displayedEntries = 0;
     let isLoading = false;
     let resizeTimeout;
-    
+    async function checkForNewEntries() {
+    try {
+        const res = await fetch(`${API}?action=list`);
+        const data = await res.json();
+
+        if (!data.length) return;
+
+        const latestId = data[0].id;
+
+        if (latestId !== newestEntryId) {
+            const newEntries = data.filter(e => e.id > newestEntryId);
+
+            if (newEntries.length > 0) {
+                prependEntries(newEntries);
+                newestEntryId = latestId;
+            }
+        }
+
+    } catch (err) {
+        console.error('Realtime check failed:', err);
+    }
+}
     async function loadAllEntries() {
         try {
-            const res = await fetch('api.php?action=list');
+            if (allEntries.length > 0) {
+            newestEntryId = allEntries[0].id;
+            }    
+            const res = await fetch(`${API}?action=list`);
             if (!res.ok) throw new Error('Failed to load entries');
             
             allEntries = await res.json();
@@ -231,7 +257,30 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading entries:', error);
         }
     }
-    
+    function prependEntries(entries) {
+    const container = document.getElementById('entries');
+
+    const isAtTop = container.scrollTop < 50;
+
+    entries.reverse().forEach(e => {
+        const entryEl = document.createElement('div');
+        entryEl.className = 'entry';
+
+        entryEl.innerHTML = `
+            <strong>${e.name}</strong><br>
+            <small>${e.created_at}</small>
+            <p>${e.message}</p>
+        `;
+
+        container.prepend(entryEl);
+    });
+
+    if (isAtTop) {
+        container.scrollTop = 0;
+    }
+
+    resize();
+}
     function loadMoreEntries() {
         if (isLoading || displayedEntries >= allEntries.length) return;
         
@@ -264,11 +313,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         displayedEntries = endIdx;
         isLoading = false;
-        resize();
+        requestAnimationFrame(resize);
     }
     
     function setupIntersectionObserver() {
         // Create a sentinel at the bottom to trigger load
+        const oldSentinel = document.getElementById('sentinel');
+        if (oldSentinel) oldSentinel.remove();
         const container = document.getElementById('entries');
         const sentinel = document.createElement('div');
         sentinel.id = 'sentinel';
@@ -296,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const formData = new FormData(e.target);
-            const res = await fetch('api.php?action=sign', {
+            const res = await fetch(`${API}?action=sign`, {
                 method: 'POST',
                 body: formData
             });
@@ -310,7 +361,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorDiv.classList.add('show');
             } else {
                 e.target.reset();
-                if (window.turnstile) window.turnstile.reset();
+                if (window.turnstile && typeof turnstile.reset === 'function') {
+                    turnstile.reset();
+                }
                 await loadAllEntries();
             }
         } catch (error) {
@@ -321,18 +374,17 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.disabled = false;
         }
     });
-    
     function resize() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            window.parent.postMessage({ 
-                guestbookHeight: document.body.scrollHeight 
-            }, "*");
-        }, 250);
-    }
-    
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        window.parent.postMessage({ 
+            guestbookHeight: document.body.scrollHeight 
+        }, "*");
+    }, 250);
+}
     loadAllEntries();
     window.addEventListener('resize', resize);
+    setInterval(checkForNewEntries, 5000); // every 5s
 });
 </script>
 
