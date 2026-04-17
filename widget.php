@@ -358,14 +358,15 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDiv.classList.remove('show');
         
         try {
-            const formData = new FormData(e.target);
-            
-            const res = await fetch(`${API}?action=sign`, {
-                method: 'POST',
-                body: formData
-            });
-            
-            const result = await res.json();
+           const formData = new FormData(e.target);
+        // Add timezone
+          const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          formData.append('timezone', userTz);
+          const res = await fetch(`${API}?action=sign`, {
+                    method: 'POST',
+                    body: formData
+           });
+           const result = await res.json();
             
             if (result.error) {
                 errorDiv.textContent = result.error;
