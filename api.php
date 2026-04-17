@@ -27,6 +27,15 @@ try {
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
         exit;
     }
+    if ($action === 'delete') {
+        $id = $_POST['id'] ?? null;
+        if (!$id) {
+            throw new Exception('Missing ID');
+        }
+        
+        // Your delete query here
+        $stmt = $pdo->prepare('DELETE FROM entries WHERE id = ?');
+        $stmt->execute([$id]);
  
     if ($action === 'sign') {
         // Enforce POST method
