@@ -35,7 +35,7 @@ try {
     
     echo json_encode($entries);
     exit;
-}
+
     }
     if ($action === 'delete') {
         $id = $_POST['id'] ?? null;
