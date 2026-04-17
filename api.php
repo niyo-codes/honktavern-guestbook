@@ -50,6 +50,7 @@ try {
         } 
         $name = trim($_POST['name'] ?? '');
         $message = trim($_POST['message'] ?? '');
+        $timezone = $_POST['timezone'] ?? 'UTC';  // fallback to UTC
      
         if (!$name || !$message) {
             echo json_encode(['error' => 'Missing fields']);
