@@ -208,24 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let resizeTimeout;
     let newestEntryId = null;
 
-    async function initializeCsrfToken() {
-        try {
-            const res = await fetch(`${API}?action=list`);
-            if (!res.ok) return;
-            
-            const data = await res.json();
-            if (!Array.isArray(data)) return;
-
-            // Try to get CSRF from meta tag or document cookie
-            const metaTag = document.querySelector('meta[name="csrf-token"]');
-            if (metaTag) {
-                document.getElementById('csrfToken').value = metaTag.content;
-            }
-        } catch (err) {
-            console.warn('CSRF initialization skipped, will use session-based token');
-        }
-    }
-
     async function checkForNewEntries() {
         try {
             const res = await fetch(`${API}?action=list`);
@@ -424,8 +406,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 250);
     }
-
-    initializeCsrfToken();
     loadAllEntries();
     window.addEventListener('resize', resize);
     setInterval(checkForNewEntries, 5000);
