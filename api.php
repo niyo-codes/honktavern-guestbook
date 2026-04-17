@@ -49,7 +49,7 @@ try {
         } 
         $name = trim($_POST['name'] ?? '');
         $message = trim($_POST['message'] ?? '');
- 
+     
         if (!$name || !$message) {
             echo json_encode(['error' => 'Missing fields']);
             exit;
@@ -133,12 +133,13 @@ try {
         echo json_encode(['success' => true, 'message' => 'Entry signed successfully']);
         exit;
     }
- 
-    // Unknown action
+    else{
+  // Unknown action
     http_response_code(400);
     echo json_encode(['error' => 'Invalid action']);
     exit;
- 
+    }
+
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Database error']);
