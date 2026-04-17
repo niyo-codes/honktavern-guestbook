@@ -129,8 +129,8 @@ try {
         touch($rateFile);
  
         // Insert entry
-        $stmt = $db->prepare("INSERT INTO entries (name, message) VALUES (?, ?)");
-        $stmt->execute([$name, $message]);
+        $stmt = $db->prepare("INSERT INTO entries (name, message, timezone) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $message, %timezone]);
  
         echo json_encode(['success' => true, 'message' => 'Entry signed successfully']);
         exit;
