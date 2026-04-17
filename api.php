@@ -36,6 +36,9 @@ try {
         // Your delete query here
         $stmt = $pdo->prepare('DELETE FROM entries WHERE id = ?');
         $stmt->execute([$id]);
+        
+        echo json_encode(['success' => true]);
+    } 
  
     if ($action === 'sign') {
         // Enforce POST method
