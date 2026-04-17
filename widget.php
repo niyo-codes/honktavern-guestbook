@@ -185,7 +185,7 @@ button:disabled {
         <input name="name" placeholder="May Springflower @ World" required minlength="2" maxlength="100">
         <textarea name="message" placeholder="A gil for your thoughts? Perhaps?" required minlength="10" maxlength="350"></textarea>
         <div id="charCount" style="font-size:0.8em;color:#aaa;text-align:right;">0 / 350</div>
-        <input type="hidden" name="csrf_token" id="csrfToken">
+        <input type="hidden" name="csrf_token" id="csrfToken" value="<?= getCsrfToken() ?>">
         <input type="text" name="website" style="position:absolute;left:-9999px;top:-9999px;">
         <script>
             const textarea = document.querySelector('textarea[name="message"]');
