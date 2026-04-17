@@ -23,9 +23,19 @@ $action = $_GET['action'] ?? '';
  
 try {
     if ($action === 'list') {
-        $stmt = $db->query("SELECT id, name, message, created_at FROM entries ORDER BY id DESC LIMIT " . (int)$config['max_entries']);
-        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-        exit;
+    $stmt = $db->query('SELECT id, name, message, created_at, timezone FROM entries ORDER BY created_at DESC');
+    $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Convert timestamps to user's timezone
+    foreach ($entries as &$entry) {
+        $dt = new DateTime($entry['created_at'], new DateTimeZone('UTC'));
+        $dt->setTimezone(new DateTimeZone($entry['timezone']));
+        $entry['created_at'] = $dt->format('Y-m-d H:i:s');
+    }
+    
+    echo json_encode($entries);
+    exit;
+}
     }
     if ($action === 'delete') {
         $id = $_POST['id'] ?? null;
