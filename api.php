@@ -33,11 +33,12 @@ try {
             throw new Exception('Missing ID');
         }
         
-        // Your delete query here
+        // delete query 
         $stmt = $db->prepare('DELETE FROM entries WHERE id = ?');
         $stmt->execute([$id]);
         
         echo json_encode(['success' => true]);
+        exit;  // 
     } 
  
     if ($action === 'sign') {
