@@ -17,17 +17,7 @@ function getClientIP() {
     }
     return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 }
- 
-// Helper: Generate CSRF token
-function getCsrfToken() {
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['csrf_token'];
-}
- 
-// Initialize CSRF token for frontend
-getCsrfToken();
+
  
 $action = $_GET['action'] ?? '';
  
@@ -44,16 +34,7 @@ try {
             http_response_code(405);
             echo json_encode(['error' => 'Method not allowed']);
             exit;
-        }
- 
-        // Validate CSRF token
-        $csrfToken = $_POST['csrf_token'] ?? '';
-        if (empty($csrfToken) || !hash_equals(getCsrfToken(), $csrfToken)) {
-            http_response_code(403);
-            echo json_encode(['error' => 'Invalid request']);
-            exit;
-        }
- 
+        } 
         $name = trim($_POST['name'] ?? '');
         $message = trim($_POST['message'] ?? '');
  
