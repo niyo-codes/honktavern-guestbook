@@ -1,11 +1,7 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
-$DATABASE_URL = getenv('DATABASE_URL');
+$DATABASE_URL = getenv('DATABASE_URL'); // Render provides this automatically
 
 if (!$DATABASE_URL) {
     die('DATABASE_URL environment variable not set');
