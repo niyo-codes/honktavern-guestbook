@@ -140,16 +140,17 @@ try {
  
         // Insert entry
         $stmt = $db->prepare("INSERT INTO entries (name, message, timezone) VALUES (?, ?, ?)");
-        $stmt->execute([$name, $message, %timezone]);
+        $stmt->execute([$name, $message, $timezone]);
  
         echo json_encode(['success' => true, 'message' => 'Entry signed successfully']);
         exit;
     }
-    else{
-  // Unknown action
-    http_response_code(400);
-    echo json_encode(['error' => 'Invalid action']);
-    exit;
+    else
+    { 
+      // Unknown action
+      http_response_code(400);
+      echo json_encode(['error' => 'Invalid action']);
+      exit;
     }
 
 } catch (PDOException $e) {
@@ -161,3 +162,4 @@ try {
     echo json_encode(['error' => 'Server error']);
     exit;
 }
+
