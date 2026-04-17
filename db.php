@@ -60,8 +60,8 @@ function initializeSchema($db) {
 
         // Create index for performance on queries
         $db->exec("
-            CREATE INDEX IF NOT EXISTS idx_entries_created_at 
-            ON entries(created_at::TIMESTAMP(0) DESC)
+            CREATE INDEX IF NOT EXISTS idx_entries_created_at
+ON entries (date_trunc('minute', created_at));
             
         ");
 
