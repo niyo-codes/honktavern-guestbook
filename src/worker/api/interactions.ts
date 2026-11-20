@@ -18,14 +18,15 @@ export async function getGuestbookState(
 
   const [settings, likes, visitorLike] = await Promise.all([
     env.DB.prepare(
-      "SELECT greeting, greeting_updated_at FROM guestbook_settings WHERE id = 1"
-    ).first<{ greeting: string; greeting_updated_at: number | null }>(),
+      "SELECT greeting, greeting_updated_at, like_count_offset FROM guestbook_settings WHERE id = 1"
+    ).first<{
+      greeting: string;
+      greeting_updated_at: number | null;
+      like_count_offset: number;
+    }>(),
     env.DB.prepare(
       "SELECT COUNT(*) AS count FROM guestbook_likes"
     ).first<{ count: number }>(),
-    env.DB.prepare(
-      "SELECT like_count_offset FROM guestbook_settings WHERE id = 1"
-    ).first<{ like_count_offset: number }>(),
     env.DB.prepare(
       "SELECT 1 AS liked FROM guestbook_likes WHERE ip_fingerprint = ?1 AND like_day = ?2 LIMIT 1"
     ).bind(fingerprint, day).first<{ liked: number }>()
