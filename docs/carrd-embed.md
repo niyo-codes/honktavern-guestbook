@@ -13,7 +13,7 @@ Use **Type: Code**, **Style: Inline**, and place the following in the code field
 ```html
 <div data-honk-tavern-guestbook></div>
 <script
-  src="https://honktavern-guestbook.muddles.net.worker.dev/embed.js"
+  src="https://honktavern-guestbook.muddles-net.workers.dev/embed.js"
   defer
 ></script>
 ```
@@ -26,10 +26,14 @@ Do not paste the full guestbook HTML/CSS into Carrd. This keeps future visual ho
 
 The Worker must be deployed after changes to the native embed or CORS configuration.
 
+The Worker origin is:
+
+- `https://honktavern-guestbook.muddles-net.workers.dev`
+
 `ALLOWED_ORIGIN` is configured for:
 
 - `https://honktavern.crd.co`
-- `https://honktavern-guestbook.muddles.net.worker.dev`
+- `https://honktavern-guestbook.muddles-net.workers.dev`
 
 The second origin preserves direct use of the Worker-hosted guestbook.
 
