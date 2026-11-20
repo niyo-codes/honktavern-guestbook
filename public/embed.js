@@ -1,4 +1,4 @@
-const WIDGET_ORIGIN = "https://honktavern-guestbook.muddles.net.worker.dev";
+const WIDGET_ORIGIN = "https://honktavern-guestbook.muddles-net.workers.dev";
 
 async function loadGuestbook(target) {
   if (target.dataset.honkGuestbookLoaded === "true") return;
