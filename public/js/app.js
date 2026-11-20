@@ -6,7 +6,8 @@ import {
   adminLogin,
   adminLogout,
   updateGreeting,
-  moderateEntry
+  moderateEntry,
+  listEntries
 } from "./api/guestbook-api.js";
 import { GuestbookBook } from "./book/book.js";
 import { setupSigningForm } from "./signing/form.js";
@@ -15,13 +16,17 @@ const $ = (id) => document.getElementById(id);
 
 const entries = $("entries");
 const status = $("entries-status");
+const likeButton = $("like-button");
+const likeHeart = $("like-heart");
+const likeCount = $("like-count");
+
 const book = new GuestbookBook({
   entries,
   status,
   previousButton: $("previous-page"),
   nextButton: $("next-page"),
   pageIndicator: $("page-indicator"),
-  api: (cursor) => import("./api/guestbook-api.js").then(({ listEntries }) => listEntries(cursor)),
+  api: listEntries,
   onAdminAction: null
 });
 
@@ -29,29 +34,37 @@ let adminAuthenticated = false;
 
 async function refreshState() {
   const state = await getGuestbookState();
-  $("like-count").textContent = String(state.totalLikes);
+  likeCount.textContent = String(state.totalLikes);
+  likeHeart.classList.toggle("is-hidden", state.likedToday === true);
+  likeButton.setAttribute("aria-pressed", state.likedToday ? "true" : "false");
   $("greeting-text").textContent = state.greeting || "";
   $("greeting-date").textContent = state.greetingUpdatedAt
     ? new Date(state.greetingUpdatedAt).toLocaleDateString()
     : "";
 }
 
-async function openDialog(dialog) {
-  if (typeof dialog.showModal === "function") dialog.showModal();
+function openDialog(dialog) {
+  if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
 }
 
 $("add-message").addEventListener("click", () => openDialog($("message-dialog")));
-$("like-button").addEventListener("click", async () => {
-  const button = $("like-button");
-  button.disabled = true;
+
+likeButton.addEventListener("click", async () => {
+  likeButton.disabled = true;
   try {
     const result = await likeGuestbook();
-    $("like-count").textContent = String(result.totalLikes);
+    likeCount.textContent = String(result.totalLikes);
+
+    if (result.liked) {
+      likeHeart.classList.add("is-hidden");
+      likeButton.setAttribute("aria-pressed", "true");
+    }
+
     $("like-status").textContent = result.message;
   } catch (error) {
     $("like-status").textContent = error.message;
   } finally {
-    button.disabled = false;
+    likeButton.disabled = false;
   }
 });
 
@@ -68,8 +81,6 @@ $("admin-settings").addEventListener("click", () => {
   else openDialog($("admin-dialog"));
 });
 
-$("mobile-admin").addEventListener("click", () => $("admin-settings").click());
-
 $("admin-login").addEventListener("click", async () => {
   const statusEl = $("admin-status");
   statusEl.textContent = "";
@@ -81,17 +92,17 @@ $("admin-login").addEventListener("click", async () => {
       await moderateEntry(entryId, action);
     };
     book.renderCurrent();
-    await openDialog($("admin-tools-dialog"));
+    openDialog($("admin-tools-dialog"));
   } catch (error) {
     statusEl.textContent = error.message;
     statusEl.className = "form-status status-error";
   }
 });
 
-$("edit-greeting").addEventListener("click", async () => {
+$("edit-greeting").addEventListener("click", () => {
   $("admin-tools-dialog").close();
   $("greeting-input").value = $("greeting-text").textContent;
-  await openDialog($("greeting-dialog"));
+  openDialog($("greeting-dialog"));
 });
 
 $("greeting-form").addEventListener("submit", async (event) => {
@@ -118,6 +129,7 @@ $("admin-logout").addEventListener("click", async () => {
 });
 
 const configPromise = getConfig().catch(() => ({ turnstileSiteKey: "" }));
+
 setupSigningForm({
   form: $("message-form"),
   status: $("form-status"),
@@ -131,10 +143,6 @@ setupSigningForm({
     return result;
   },
   getSiteKey: async () => (await configPromise).turnstileSiteKey
-});
-
-$("like-button").addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") event.preventDefault();
 });
 
 Promise.all([refreshState(), book.start()]).catch((error) => {
