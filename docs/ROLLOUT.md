@@ -3,7 +3,8 @@
 ## Stage 0 — Foundation
 
 - Worker API skeleton
-- D1 migration
+- D1 baseline migration
+- versioned D1 migration workflow
 - server-side Turnstile verification
 - salted visitor fingerprint
 - short-window request limiting
@@ -11,6 +12,19 @@
 - moderation-ready state
 - cursor pagination
 - health endpoints
+
+### Database gate
+
+Before production writes are enabled:
+
+1. confirm the D1 database name and ID in `wrangler.toml`;
+2. inspect pending migrations with `npx wrangler d1 migrations list DB --remote`;
+3. apply them with `npx wrangler d1 migrations apply DB --remote`;
+4. verify the migration list and database health endpoint;
+5. perform a read-only API smoke test;
+6. only then enable signing.
+
+Never edit an applied migration. New schema changes must be appended as new numbered migrations. See `docs/DATABASE.md`.
 
 ## Stage 1 — Book shell
 
