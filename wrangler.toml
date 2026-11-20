@@ -9,13 +9,13 @@ run_worker_first = ["/api/*"]
 
 [[d1_databases]]
 binding = "DB"
-database_name = "REPLACE_WITH_D1_DATABASE_NAME"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_name = "xiv-messagebook"
+database_id = "de8148ab-34b7-467d-8225-393148c2b383"
 migrations_dir = "./migrations"
 
 [vars]
-ALLOWED_ORIGIN = "https://YOUR-PRODUCTION-DOMAIN"
-TURNSTILE_SITE_KEY = "REPLACE_WITH_TURNSTILE_SITE_KEY"
+ALLOWED_ORIGIN = "https://honktavern-guestbook.muddles.net.worker.dev"
+TURNSTILE_SITE_KEY = "0x4AAAAAAC-Nngrukiqg-dqQ"
 RATE_LIMIT_SECONDS = "5"
 DAILY_ENTRY_LIMIT = "1"
 
