@@ -4,7 +4,14 @@ import {
   resetTurnstile
 } from "./turnstile.js";
 
-export function setupSigningForm({ form, status, submitButton, characterCount, api }) {
+export function setupSigningForm({
+  form,
+  status,
+  submitButton,
+  characterCount,
+  api,
+  getSiteKey
+}) {
   const name = form.elements.namedItem("name");
   const message = form.elements.namedItem("message");
   const website = form.elements.namedItem("website");
@@ -18,24 +25,24 @@ export function setupSigningForm({ form, status, submitButton, characterCount, a
   async function loadVerification() {
     if (verificationReady) return;
 
-    const siteKey = document.querySelector('meta[name="turnstile-site-key"]')?.content;
-    if (!siteKey) {
-      turnstileSlot.innerHTML =
-        '<p class="muted">Turnstile site key is not configured yet.</p>';
-      return;
-    }
+    const siteKey = await getSiteKey();
+    if (!siteKey) throw new Error("Turnstile is not configured yet.");
 
     await ensureTurnstile(siteKey, turnstileSlot);
     verificationReady = true;
   }
 
   ["focus", "pointerdown"].forEach((eventName) => {
-    form.addEventListener(eventName, () => {
-      loadVerification().catch((error) => {
-        status.textContent = error.message;
-        status.className = "form-status status-error";
-      });
-    }, { once: true });
+    form.addEventListener(
+      eventName,
+      () => {
+        loadVerification().catch((error) => {
+          status.textContent = error.message;
+          status.className = "form-status status-error";
+        });
+      },
+      { once: true }
+    );
   });
 
   form.addEventListener("submit", async (event) => {
