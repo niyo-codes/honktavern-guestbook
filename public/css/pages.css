@@ -1,0 +1,38 @@
+.entries {
+  min-height: 260px;
+}
+
+.entry-skeleton {
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.skeleton-line {
+  height: 12px;
+  margin: 8px 0;
+  border-radius: 5px;
+  background: rgba(61,43,34,.10);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton-line--short { width: 35%; }
+.skeleton-line--long { width: 88%; }
+
+@keyframes pulse {
+  50% { opacity: .45; }
+}
+
+.empty-state {
+  padding: 48px 12px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.retry-card {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255,255,255,.28);
+}
+
+.retry-card p { margin-top: 0; }
