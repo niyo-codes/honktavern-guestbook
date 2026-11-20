@@ -277,7 +277,7 @@ button { cursor: pointer; }
 
 @media (max-width: 639px) {
   .guestbook-shell { width: 100%; padding: 0; }
-  .book-widget { min-height: 480px; height: 80vh; border-radius: 0; }
+  .book-widget { width: 100%; border-radius: 0; }
   .book-skin { background-position: 55% center; }
   .greeting-overlay { left: 7%; top: 22%; width: 47%; height: 27%; }
   .likes-overlay { left: 10%; top: 55%; width: 40%; height: 20%; }
@@ -290,5 +290,5 @@ button { cursor: pointer; }
 }
 
 @media (min-width: 1600px) {
-  .guestbook-shell { width: min(80vw, 1180px); }
+  .guestbook-shell { width: min(80vw, 1180px, calc(80vh * 1670 / 941)); }
 }
