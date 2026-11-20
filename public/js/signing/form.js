@@ -46,6 +46,8 @@ export function setupSigningForm({
   });
 
   form.addEventListener("submit", async (event) => {
+    if (event.submitter?.value === "cancel") return;
+
     event.preventDefault();
     status.textContent = "";
     status.className = "form-status";
