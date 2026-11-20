@@ -108,7 +108,7 @@ export class GuestbookBook {
 
     const message = document.createElement("p");
     message.className = "entry-message";
-    message.textContent = entry.message;
+    message.textContent = this.normalizeMessageText(entry.message);
 
     article.append(name, date, message);
 
