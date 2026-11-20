@@ -112,13 +112,13 @@ button { cursor: pointer; }
 .greeting-overlay {
   position: absolute;
   z-index: 4;
-  left: 12.5%;
-  top: 23%;
-  width: 35%;
-  height: 27%;
+  left: 10.5%;
+  top: 22%;
+  width: 40%;
+  height: 26%;
   display: grid;
   place-content: center;
-  padding: 1.4% 1.4% 1.8%;
+  padding: 0.4% 4.4% 3.8%;
   text-align: center;
   pointer-events: none;
 }
