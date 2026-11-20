@@ -18,6 +18,7 @@ export interface Env {
   ASSETS: Fetcher;
   TURNSTILE_SECRET: string;
   FINGERPRINT_SALT: string;
+  TURNSTILE_SITE_KEY: string;
   ALLOWED_ORIGIN: string;
   RATE_LIMIT_SECONDS?: string;
   DAILY_ENTRY_LIMIT?: string;
