@@ -86,10 +86,10 @@ button { cursor: pointer; }
   outline-offset: 2px;
 }
 /* All interactive hotspots are anchored to the 1670:941 artwork coordinate space. */
-.hotspot--pencil { left: 42.0%; top: 13.1%; width: 3.1%; aspect-ratio: 1; }
-.hotspot--settings { left: 44.8%; top: 13.1%; width: 3.1%; aspect-ratio: 1; }
-.hotspot--like { left: 35.0%; top: 76.0%; width: 5.6%; aspect-ratio: 1; }
-.hotspot--add-message { left: 41.7%; top: 76.0%; width: 5.6%; aspect-ratio: 1; }
+.hotspot--pencil { left: 42.0%; top: 13.1%; width: 1.55%; aspect-ratio: 1; }
+.hotspot--settings { left: 44.8%; top: 13.1%; width: 1.55%; aspect-ratio: 1; }
+.hotspot--like { left: 35.0%; top: 76.0%; width: 2.8%; aspect-ratio: 1; }
+.hotspot--add-message { left: 41.7%; top: 76.0%; width: 2.8%; aspect-ratio: 1; }
 
 .hotspot--like #like-heart {
   display: block;
