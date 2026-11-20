@@ -6,6 +6,9 @@
   --muted: #806b58;
   --accent: #7c3f2f;
   --line: rgba(74, 53, 38, .18);
+  --book-text-font: "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+  --book-text-size: clamp(.9rem, 1.8cqw, 1.2rem);
+  --book-text-line: 1.45;
 }
 
 * { box-sizing: border-box; }
@@ -115,7 +118,7 @@ button { cursor: pointer; }
   height: 27%;
   display: grid;
   place-content: center;
-  padding: 2% 5%;
+  padding: 1.4% 1.4% 1.8%;
   text-align: center;
   pointer-events: none;
 }
@@ -124,13 +127,17 @@ button { cursor: pointer; }
   max-height: 100%;
   overflow: hidden;
   white-space: pre-wrap;
-  font-size: clamp(.9rem, 1.55cqw, 1.15rem);
-  line-height: 1.4;
+  font-family: var(--book-text-font);
+  font-size: var(--book-text-size);
+  line-height: var(--book-text-line);
+  text-wrap: pretty;
 }
 .greeting-overlay time {
-  margin-top: 7px;
+  margin-top: .18em;
   color: var(--muted);
-  font-size: clamp(.65rem, .9cqw, .78rem);
+  font-family: var(--book-text-font);
+  font-size: clamp(.72rem, 1cqw, .82rem);
+  line-height: 1.2;
 }
 
 .likes-overlay {
@@ -192,6 +199,7 @@ button { cursor: pointer; }
 .entry-name {
   margin: 0;
   padding-right: 22%;
+  font-family: var(--book-text-font);
   font-size: clamp(.95rem, 1.9cqw, 1.25rem);
   line-height: 1.15;
 }
@@ -207,16 +215,24 @@ button { cursor: pointer; }
   display: block;
   margin-top: .18em;
   color: var(--muted);
+  font-family: var(--book-text-font);
   font-size: clamp(.72rem, 1cqw, .82rem);
+  line-height: 1.2;
 }
 .entry-message {
-  margin: .45em 0 0;
-  font-size: clamp(.9rem, 1.8cqw, 1.2rem);
-  line-height: 1.45;
+  margin: .32em 0 0;
+  padding: .25em .45em .32em;
+  font-family: var(--book-text-font);
+  font-size: var(--book-text-size);
+  line-height: var(--book-text-line);
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-break: normal;
+  text-wrap: pretty;
   overflow: hidden;
+  background: rgba(255, 250, 232, .86);
+  border: 1px solid rgba(120, 90, 60, .12);
+  border-radius: 5px;
 }
 .entry-admin {
   position: absolute;
