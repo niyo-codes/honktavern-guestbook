@@ -7,7 +7,7 @@
   --accent: #7c3f2f;
   --line: rgba(74, 53, 38, .18);
   --book-text-font: "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
-  --book-text-size: clamp(.9rem, 1.8cqw, 1.2rem);
+  --book-text-size: clamp(.72rem, 1.44cqw, .96rem);
   --book-text-line: 1.45;
 }
 
@@ -227,7 +227,7 @@ button { cursor: pointer; }
   margin: .32em 0 0;
   padding: .25em .45em .32em;
   font-family: var(--book-text-font);
-  font-size: var(--message-font-size, calc(var(--book-text-size) * .8));
+  font-size: var(--message-font-size, calc(var(--book-text-size) * .6));
   line-height: var(--book-text-line);
   white-space: pre-wrap;
   overflow-wrap: break-word;
