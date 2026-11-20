@@ -8,7 +8,7 @@ import {
   moderation,
   moderationStatusContract
 } from "./api/moderation";
-import { corsHeaders, json } from "./http";
+import { corsHeaders, isAllowedOrigin, json } from "./http";
 
 function withCors(response: Response, request: Request, env: Env): Response {
   const headers = new Headers(response.headers);
@@ -31,6 +31,10 @@ export default {
 
     if (!url.pathname.startsWith("/api/")) {
       return env.ASSETS.fetch(request);
+    }
+
+    if (!isAllowedOrigin(request, env)) {
+      return new Response("Origin not allowed", { status: 403 });
     }
 
     if (request.method === "OPTIONS") {
