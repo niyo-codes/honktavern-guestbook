@@ -15,9 +15,10 @@ migrations_dir = "./migrations"
 
 [vars]
 ALLOWED_ORIGIN = "https://YOUR-PRODUCTION-DOMAIN"
+TURNSTILE_SITE_KEY = "REPLACE_WITH_TURNSTILE_SITE_KEY"
 RATE_LIMIT_SECONDS = "5"
 DAILY_ENTRY_LIMIT = "1"
 
-# Secrets must be configured with:
+# Secrets:
 # wrangler secret put TURNSTILE_SECRET
 # wrangler secret put FINGERPRINT_SALT
