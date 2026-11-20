@@ -8,7 +8,7 @@
 - server-side Turnstile verification
 - salted visitor fingerprint
 - short-window request limiting
-- one-entry-per-24-hours rule
+- one-entry-per-24-hours rule (temporarily disabled in sample-data mode)
 - moderation-ready state
 - cursor pagination
 - health endpoints
