@@ -34,12 +34,13 @@
 
       <section class="likes-overlay" aria-labelledby="likes-title">
         <h2 id="likes-title" class="sr-only">Total Likes</h2>
-        <button id="like-button" type="button" aria-describedby="like-status" aria-pressed="false">
-          <span id="like-heart" aria-hidden="true">♥</span>
-          <strong id="like-count">0</strong>
-        </button>
-        <p id="like-status" class="sr-only" role="status" aria-live="polite"></p>
+        <strong id="like-count" class="like-count" aria-live="polite">0</strong>
       </section>
+      <button class="hotspot hotspot--like" id="like-button" type="button"
+        aria-describedby="like-status" aria-label="Like the guestbook" aria-pressed="false">
+        <span id="like-heart" aria-hidden="true">♥</span>
+      </button>
+      <p id="like-status" class="sr-only" role="status" aria-live="polite"></p>
 
       <section class="entries-overlay" aria-labelledby="entries-title">
         <h2 id="entries-title" class="sr-only">Guest messages</h2>
@@ -60,8 +61,14 @@
           <button class="dialog-close" value="cancel" type="submit" aria-label="Close message form">×</button>
           <p class="page-label">A fresh page</p>
           <h2 id="message-dialog-title">Leave a message</h2>
-          <label for="name">Name</label>
-          <input id="name" name="name" autocomplete="name" maxlength="100" required>
+          <label for="name">Character name &amp; Home World</label>
+          <input id="name" name="name" autocomplete="name" maxlength="100"
+            placeholder="Nonyio Niyo @ Raiden"
+            pattern="^.+\s@\s[A-Za-z]+$"
+            title="Enter your character name followed by @ and your FFXIV Home World."
+            aria-describedby="identity-help"
+            required>
+          <p class="field-help" id="identity-help">Use <strong>Character Name @ World</strong>. Your World is checked against the current FFXIV World list.</p>
           <label for="message">Message</label>
           <textarea id="message" name="message" maxlength="350" required></textarea>
           <div class="character-count" id="character-count" aria-live="polite">0 / 350</div>

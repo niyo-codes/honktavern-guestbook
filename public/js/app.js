@@ -35,7 +35,7 @@ let adminAuthenticated = false;
 async function refreshState() {
   const state = await getGuestbookState();
   likeCount.textContent = String(state.totalLikes);
-  likeHeart.classList.toggle("is-hidden", state.likedToday === true);
+  likeButton.classList.toggle("is-liked", state.likedToday === true);
   likeButton.setAttribute("aria-pressed", state.likedToday ? "true" : "false");
   $("greeting-text").textContent = state.greeting || "";
   $("greeting-date").textContent = state.greetingUpdatedAt
@@ -56,7 +56,7 @@ likeButton.addEventListener("click", async () => {
     likeCount.textContent = String(result.totalLikes);
 
     if (result.liked) {
-      likeHeart.classList.add("is-hidden");
+      likeButton.classList.add("is-liked");
       likeButton.setAttribute("aria-pressed", "true");
     }
 
