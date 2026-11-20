@@ -44,7 +44,7 @@ export async function listEntries(request: Request, env: Env): Promise<Response>
 
   const statement = cursor
     ? env.DB.prepare(
-        `SELECT id, name, message, created_at, moderation_status
+        `SELECT id, name, world, message, created_at, moderation_status
          FROM entries
          WHERE moderation_status = 'visible'
            AND (created_at < ?1 OR (created_at = ?1 AND id < ?2))
@@ -170,6 +170,7 @@ export async function createEntry(request: Request, env: Env): Promise<Response>
       entry: {
         id: result.meta.last_row_id,
         name: validation.name,
+        world: validation.world,
         message: validation.message,
         created_at: now,
         moderation_status: "visible"
