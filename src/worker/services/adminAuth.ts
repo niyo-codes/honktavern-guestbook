@@ -74,7 +74,7 @@ export async function isAdmin(request: Request, env: Env): Promise<boolean> {
 }
 
 export function sessionCookie(token: string): string {
-  return `${COOKIE}=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_TTL / 1000}`;
+  return `${COOKIE}=${token}; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=${SESSION_TTL / 1000}`;
 }
 
 export function clearedSessionCookie(): string {
