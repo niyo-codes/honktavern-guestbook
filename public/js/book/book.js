@@ -22,7 +22,6 @@ export class GuestbookBook {
 
   async nextPage() {
     if (this.loading) return;
-
     const current = this.pages[this.pageIndex];
     if (!current) return;
 
@@ -33,7 +32,6 @@ export class GuestbookBook {
     }
 
     if (!current.nextCursor) return;
-
     this.cursors[this.pageIndex + 1] = current.nextCursor;
     await this.loadPage(this.pageIndex + 1);
   }
@@ -73,6 +71,7 @@ export class GuestbookBook {
       empty.textContent = this.pageIndex === 0
         ? "No notes yet. Be the first to leave one."
         : "No more notes.";
+      empty.setAttribute("role", "listitem");
       this.entries.appendChild(empty);
     } else {
       page.entries.forEach((entry) => this.entries.appendChild(this.render(entry)));
@@ -88,6 +87,8 @@ export class GuestbookBook {
     const article = document.createElement("article");
     article.className = "entry";
     article.dataset.entryId = String(entry.id);
+    article.setAttribute("role", "listitem");
+    article.setAttribute("aria-label", `Message from ${entry.name}`);
 
     const name = document.createElement("h3");
     name.className = "entry-name";
@@ -107,12 +108,14 @@ export class GuestbookBook {
     if (this.onAdminAction) {
       const controls = document.createElement("div");
       controls.className = "entry-admin";
+      controls.setAttribute("aria-label", `Moderation controls for ${entry.name}`);
 
       for (const [action, label] of [["hide", "–"], ["delete", "×"]]) {
         const button = document.createElement("button");
         button.type = "button";
         button.textContent = label;
         button.title = action === "hide" ? "Hide message" : "Delete message";
+        button.setAttribute("aria-label", action === "hide" ? `Hide message from ${entry.name}` : `Delete message from ${entry.name}`);
         button.addEventListener("click", async () => {
           button.disabled = true;
           try {
@@ -129,10 +132,5 @@ export class GuestbookBook {
     }
 
     return article;
-  }
-
-  setAdminMode(enabled) {
-    this.onAdminAction = enabled ? this.onAdminAction : null;
-    this.renderCurrent();
   }
 }
