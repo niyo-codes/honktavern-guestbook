@@ -37,3 +37,19 @@ setupSigningForm({
 });
 
 book.load({ reset: true }).catch(() => {});
+
+const mobileTabs = document.querySelectorAll(".mobile-tab");
+const pages = document.querySelectorAll(".book-page");
+
+function selectMobilePage(targetId) {
+  pages.forEach((page) => page.classList.toggle("is-active", page.id === targetId));
+  mobileTabs.forEach((tab) => {
+    const active = tab.dataset.pageTarget === targetId;
+    tab.classList.toggle("is-active", active);
+    tab.setAttribute("aria-selected", String(active));
+  });
+}
+
+mobileTabs.forEach((tab) => {
+  tab.addEventListener("click", () => selectMobilePage(tab.dataset.pageTarget));
+});
