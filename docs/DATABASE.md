@@ -55,7 +55,7 @@ Use Wrangler to allocate the next migration number:
 npx wrangler d1 migrations create DB "describe the change"
 ```
 
-Write the SQL into the generated file, then review it with the code diff. Cloudflare recommends versioned migration files and provides `d1 migrations create` for this workflow. citeturn463778search1
+Write the SQL into the generated file, then review it with the code diff. Cloudflare recommends versioned migration files and provides `d1 migrations create` for this workflow.
 
 ### 3. Apply locally first
 
@@ -107,7 +107,7 @@ Before destructive or data-shaping migrations, export the remote database:
 npx wrangler d1 export DB --remote --output ./backups/guestbook-YYYYMMDD.sql
 ```
 
-Keep backups outside the public/static directory and do not commit them if they contain guestbook data. Cloudflare supports remote D1 exports for this purpose. citeturn463778search8
+Keep backups outside the public/static directory and do not commit them if they contain guestbook data. Cloudflare supports remote D1 exports for this purpose.
 
 ## Rollback policy
 
