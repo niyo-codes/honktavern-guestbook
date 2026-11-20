@@ -18,8 +18,12 @@ export async function getGuestbookState(
 
   const [settings, likes, visitorLike] = await Promise.all([
     env.DB.prepare(
-      "SELECT greeting, greeting_updated_at FROM guestbook_settings WHERE id = 1"
-    ).first<{ greeting: string; greeting_updated_at: number | null }>(),
+      "SELECT greeting, greeting_updated_at, like_count_offset FROM guestbook_settings WHERE id = 1"
+    ).first<{
+      greeting: string;
+      greeting_updated_at: number | null;
+      like_count_offset: number;
+    }>(),
     env.DB.prepare(
       "SELECT COUNT(*) AS count FROM guestbook_likes"
     ).first<{ count: number }>(),
@@ -32,7 +36,7 @@ export async function getGuestbookState(
     ok: true,
     greeting: settings?.greeting ?? "",
     greetingUpdatedAt: settings?.greeting_updated_at ?? null,
-    totalLikes: Number(likes?.count ?? 0),
+    totalLikes: Number(settings?.like_count_offset ?? 0) + Number(likes?.count ?? 0),
     likedToday: Boolean(visitorLike?.liked)
   });
 }
@@ -53,16 +57,21 @@ export async function likeGuestbook(
      VALUES (?1, ?2, ?3)`
   ).bind(fingerprint, day, now).run();
 
-  const total = await env.DB.prepare(
-    "SELECT COUNT(*) AS count FROM guestbook_likes"
-  ).first<{ count: number }>();
+  const [total, settings] = await Promise.all([
+    env.DB.prepare(
+      "SELECT COUNT(*) AS count FROM guestbook_likes"
+    ).first<{ count: number }>(),
+    env.DB.prepare(
+      "SELECT like_count_offset FROM guestbook_settings WHERE id = 1"
+    ).first<{ like_count_offset: number }>()
+  ]);
 
   const accepted = Number(result.meta.changes ?? 0) > 0;
 
   return json({
     ok: true,
     liked: accepted,
-    totalLikes: Number(total?.count ?? 0),
+    totalLikes: Number(settings?.like_count_offset ?? 0) + Number(total?.count ?? 0),
     message: accepted
       ? "Thanks for the like!"
       : "You've already left a like today."

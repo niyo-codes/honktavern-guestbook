@@ -52,7 +52,7 @@ export async function listEntries(request: Request, env: Env): Promise<Response>
          LIMIT ?3`
       ).bind(cursor.createdAt, cursor.id, limit + 1)
     : env.DB.prepare(
-        `SELECT id, name, message, created_at, moderation_status
+        `SELECT id, name, world, message, created_at, moderation_status
          FROM entries
          WHERE moderation_status = 'visible'
          ORDER BY created_at DESC, id DESC

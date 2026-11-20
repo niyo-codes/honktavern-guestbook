@@ -187,7 +187,7 @@ button { cursor: pointer; }
 .entry-name {
   margin: 0;
   padding-right: 22%;
-  font-size: clamp(.78rem, 1.35cqw, 1rem);
+  font-size: clamp(.82rem, 1.45cqw, 1.05rem);
   line-height: 1.15;
 }
 .entry-world {
@@ -206,15 +206,15 @@ button { cursor: pointer; }
 }
 .entry-message {
   margin: .45em 0 0;
-  font-size: clamp(.62rem, 1cqw, .82rem);
-  line-height: 1.35;
+  font-size: clamp(.72rem, 1.25cqw, 1rem);
+  line-height: 1.45;
   white-space: pre-wrap;
   overflow: hidden;
 }
 .entry-admin {
   position: absolute;
   right: 0;
-  top: .35em;
+  top: .25em;
   display: flex;
   gap: 3px;
 }
