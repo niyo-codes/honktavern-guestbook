@@ -12,6 +12,10 @@ function decode(value: string): string {
   return atob(padded);
 }
 
+function decodeBytes(value: string): Uint8Array {
+  return Uint8Array.from(decode(value), (char) => char.charCodeAt(0));
+}
+
 async function sign(value: string, secret: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     "raw",
@@ -36,7 +40,7 @@ async function verifySignature(value: string, signature: string, secret: string)
     return await crypto.subtle.verify(
       "HMAC",
       key,
-      Uint8Array.from(atob(decode(signature)), (char) => char.charCodeAt(0)),
+      decodeBytes(signature),
       new TextEncoder().encode(value)
     );
   } catch {
