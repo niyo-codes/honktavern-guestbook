@@ -89,7 +89,12 @@ button { cursor: pointer; }
 .hotspot--pencil { left: 43.5%; top: 11.1%; width: 1.55%; aspect-ratio: 1; }
 .hotspot--settings { left: 46.5%; top: 11%; width: 1.55%; aspect-ratio: 1; }
 .hotspot--like { left: 36.2%; top: 77.5%; width: 4%; aspect-ratio: 1; }
-.hotspot--add-message { left: 42.7%; top: 77.5%; width: 2.8%; aspect-ratio: 1; }
+.hotspot--add-message {
+  left: 42.9%;
+  top: 77.5%;
+  width: 4.1%;
+  aspect-ratio: 1;
+}
 
 .hotspot--like #like-heart {
   display: block;
