@@ -86,10 +86,10 @@ button { cursor: pointer; }
   outline-offset: 2px;
 }
 /* All interactive hotspots are anchored to the 1670:941 artwork coordinate space. */
-.hotspot--pencil { left: 42.0%; top: 13.1%; width: 1.55%; aspect-ratio: 1; }
-.hotspot--settings { left: 44.8%; top: 13.1%; width: 1.55%; aspect-ratio: 1; }
-.hotspot--like { left: 35.0%; top: 76.0%; width: 2.8%; aspect-ratio: 1; }
-.hotspot--add-message { left: 41.7%; top: 76.0%; width: 2.8%; aspect-ratio: 1; }
+.hotspot--pencil { left: 43.5%; top: 11.1%; width: 1.55%; aspect-ratio: 1; }
+.hotspot--settings { left: 46.5%; top: 11%; width: 1.55%; aspect-ratio: 1; }
+.hotspot--like { left: 36.2%; top: 77.5%; width: 4%; aspect-ratio: 1; }
+.hotspot--add-message { left: 42.7%; top: 77.5%; width: 2.8%; aspect-ratio: 1; }
 
 .hotspot--like #like-heart {
   display: block;
@@ -166,7 +166,7 @@ button { cursor: pointer; }
   top: 11.1%;
   width: 34.9%;
   height: 79.4%;
-  padding: 1.8% 3.3% 2.4%;
+  padding: .7% 1.4% 1.8%;
   overflow: hidden;
 }
 .entries {
@@ -174,12 +174,12 @@ button { cursor: pointer; }
   overflow: hidden;
   display: grid;
   grid-template-rows: repeat(5, minmax(0, 1fr));
-  gap: 1.8%;
+  gap: 1%;
 }
 .entry {
   position: relative;
   min-height: 0;
-  padding: 0 0 1.2%;
+  padding: 0 0 .6%;
   margin: 0;
   border-bottom: 1px solid rgba(74,53,38,.12);
   overflow: hidden;
@@ -366,4 +366,20 @@ button { cursor: pointer; }
   .book-widget {
     display: none;
   }
+}
+
+
+/* Troubleshooting: append ?debug=1 to show the artwork-relative message containers. */
+.debug-layout .entries-overlay {
+  background: rgba(70, 120, 220, .10);
+  outline: 1px dashed rgba(40, 80, 160, .55);
+}
+.debug-layout .entry {
+  background: rgba(220, 150, 70, .13);
+  outline: 1px dashed rgba(150, 90, 30, .45);
+}
+.debug-layout .entry-name,
+.debug-layout .entry-date,
+.debug-layout .entry-message {
+  background: rgba(70, 180, 100, .12);
 }
