@@ -117,12 +117,24 @@ export class GuestbookBook {
       controls.className = "entry-admin";
       controls.setAttribute("aria-label", `Moderation controls for ${entry.name}`);
 
-      for (const [action, label] of [["hide", "–"], ["delete", "×"]]) {
+      const actions = entry.moderation_status === "visible"
+        ? [["hide", "–"], ["delete", "×"]]
+        : [["restore", "↶"], ["delete", "×"]];
+      for (const [action, label] of actions) {
         const button = document.createElement("button");
         button.type = "button";
         button.textContent = label;
-        button.title = action === "hide" ? "Hide message" : "Delete message";
-        button.setAttribute("aria-label", action === "hide" ? `Hide message from ${entry.name}` : `Delete message from ${entry.name}`);
+        button.title = action === "hide"
+          ? "Hide message"
+          : action === "restore"
+            ? "Restore message"
+            : "Delete message";
+        button.setAttribute("aria-label",
+          action === "hide"
+            ? `Hide message from ${entry.name}`
+            : action === "restore"
+              ? `Restore message from ${entry.name}`
+              : `Delete message from ${entry.name}`);
         button.addEventListener("click", async () => {
           button.disabled = true;
           try {
