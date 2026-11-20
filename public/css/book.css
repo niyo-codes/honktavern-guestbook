@@ -23,7 +23,9 @@ button { cursor: pointer; }
 .book-widget {
   position: relative;
   width: 100%;
-  height: min(80vh, 680px);
+  aspect-ratio: 1670 / 941;
+  height: auto;
+  max-height: 80vh;
   min-height: 480px;
   overflow: hidden;
   border-radius: 14px;
@@ -36,7 +38,7 @@ button { cursor: pointer; }
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: url("/assets/images/message-book-clean.jpg") center / cover no-repeat #b9a47d;
+  background: url("/assets/images/message-book-clean.png") center / contain no-repeat transparent;
 }
 
 /* Coordinate system follows the supplied book artwork. */
