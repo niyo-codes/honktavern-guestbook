@@ -50,7 +50,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url("/assets/images/message-book-clean.jpg") center / 100% 100% no-repeat transparent;
+  background: url("https://honktavern-guestbook.muddles.net.worker.dev/assets/images/message-book-clean.jpg") center / 100% 100% no-repeat transparent;
   pointer-events: none;
 }#honk-tavern-guestbook .hotspot{
   position: absolute;
