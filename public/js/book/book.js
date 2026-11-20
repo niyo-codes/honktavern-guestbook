@@ -119,7 +119,9 @@ export class GuestbookBook {
 
       const actions = entry.moderation_status === "visible"
         ? [["hide", "–"], ["delete", "×"]]
-        : [["restore", "↶"], ["delete", "×"]];
+        : entry.moderation_status === "hidden"
+          ? [["restore", "↶"], ["delete", "×"]]
+          : [];
       for (const [action, label] of actions) {
         const button = document.createElement("button");
         button.type = "button";
