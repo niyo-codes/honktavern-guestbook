@@ -5,6 +5,7 @@ import { createVisitorFingerprint } from "../services/fingerprint";
 import { isRateLimited, recordAbuseEvent } from "../services/rateLimit";
 import { verifyTurnstile } from "../services/turnstile";
 import { validateEntryInput } from "../services/validation";
+import { requireAdmin } from "./admin";
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 50;
@@ -32,6 +33,12 @@ export async function listEntries(request: Request, env: Env): Promise<Response>
   }
 
   const url = new URL(request.url);
+  const moderationView = url.searchParams.get("moderation") === "all";
+  if (moderationView) {
+    const denied = await requireAdmin(request, env);
+    if (denied) return denied;
+  }
+
   const requestedLimit = Number(url.searchParams.get("limit") ?? DEFAULT_LIMIT);
   const limit = Math.min(
     Math.max(
@@ -46,7 +53,7 @@ export async function listEntries(request: Request, env: Env): Promise<Response>
     ? env.DB.prepare(
         `SELECT id, name, world, message, created_at, moderation_status
          FROM entries
-         WHERE moderation_status = 'visible'
+         WHERE ${moderationView ? "1 = 1" : "moderation_status = 'visible'"}
            AND (created_at < ?1 OR (created_at = ?1 AND id < ?2))
          ORDER BY created_at DESC, id DESC
          LIMIT ?3`
@@ -54,7 +61,7 @@ export async function listEntries(request: Request, env: Env): Promise<Response>
     : env.DB.prepare(
         `SELECT id, name, world, message, created_at, moderation_status
          FROM entries
-         WHERE moderation_status = 'visible'
+         WHERE ${moderationView ? "1 = 1" : "moderation_status = 'visible'"}
          ORDER BY created_at DESC, id DESC
          LIMIT ?1`
       ).bind(limit + 1);
@@ -158,10 +165,10 @@ export async function createEntry(request: Request, env: Env): Promise<Response>
   const result = await env.DB
     .prepare(
       `INSERT INTO entries
-       (name, message, created_at, fingerprint_hash, moderation_status)
-       VALUES (?1, ?2, ?3, ?4, 'visible')`
+       (name, world, message, created_at, fingerprint_hash, moderation_status)
+       VALUES (?1, ?2, ?3, ?4, ?5, 'visible')`
     )
-    .bind(validation.name, validation.message, now, fingerprint)
+    .bind(validation.name, validation.world, validation.message, now, fingerprint)
     .run();
 
   return json(
