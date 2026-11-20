@@ -3,6 +3,7 @@ export type ModerationStatus = "visible" | "hidden" | "deleted";
 export interface GuestbookEntry {
   id: number;
   name: string;
+  world: string | null;
   message: string;
   created_at: number;
   moderation_status: ModerationStatus;
