@@ -1,23 +1,18 @@
 import type { Env } from "./types/guestbook";
+import { getConfig } from "./config";
+import { listEntries, createEntry } from "./api/entries";
 import { health, databaseHealth } from "./api/health";
-import { createEntry, listEntries } from "./api/entries";
-
-function corsHeaders(request: Request, env: Env): HeadersInit {
-  const origin = request.headers.get("Origin");
-  const allowed = env.ALLOWED_ORIGIN;
-
-  return {
-    "Access-Control-Allow-Origin":
-      origin && allowed && origin === allowed ? origin : allowed,
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Vary": "Origin"
-  };
-}
+import {
+  moderation,
+  moderationStatusContract
+} from "./api/moderation";
+import { corsHeaders, json } from "./http";
 
 function withCors(response: Response, request: Request, env: Env): Response {
   const headers = new Headers(response.headers);
-  for (const [key, value] of Object.entries(corsHeaders(request, env))) {
+  const cors = corsHeaders(request, env);
+
+  for (const [key, value] of cors.entries()) {
     headers.set(key, value);
   }
 
@@ -32,48 +27,76 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    if (url.pathname.startsWith("/api/")) {
-      if (request.method === "OPTIONS") {
-        return withCors(new Response(null, { status: 204 }), request, env);
-      }
-
-      try {
-        let response: Response;
-
-        if (url.pathname === "/api/health" && request.method === "GET") {
-          response = await health();
-        } else if (url.pathname === "/api/health/db" && request.method === "GET") {
-          response = await databaseHealth(env);
-        } else if (url.pathname === "/api/config" && request.method === "GET") {
-          response = Response.json({
-            ok: true,
-            turnstileSiteKey: env.TURNSTILE_SITE_KEY
-          });
-        } else if (url.pathname === "/api/entries" && request.method === "GET") {
-          response = await listEntries(request, env);
-        } else if (url.pathname === "/api/entries" && request.method === "POST") {
-          response = await createEntry(request, env);
-        } else {
-          response = Response.json(
-            { ok: false, error: "Not found" },
-            { status: 404 }
-          );
-        }
-
-        return withCors(response, request, env);
-      } catch (error) {
-        console.error("API request failed", error);
-        return withCors(
-          Response.json(
-            { ok: false, error: "The guestbook service is temporarily unavailable." },
-            { status: 500 }
-          ),
-          request,
-          env
-        );
-      }
+    if (!url.pathname.startsWith("/api/")) {
+      return env.ASSETS.fetch(request);
     }
 
-    return env.ASSETS.fetch(request);
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders(request, env)
+      });
+    }
+
+    try {
+      let response: Response;
+
+      switch (url.pathname) {
+        case "/api/health":
+          response = request.method === "GET"
+            ? await health()
+            : new Response("Method not allowed", { status: 405 });
+          break;
+
+        case "/api/health/db":
+          response = request.method === "GET"
+            ? await databaseHealth(env)
+            : new Response("Method not allowed", { status: 405 });
+          break;
+
+        case "/api/config":
+          response = request.method === "GET"
+            ? json({
+                ok: true,
+                turnstileSiteKey: getConfig(env).turnstileSiteKey
+              })
+            : new Response("Method not allowed", { status: 405 });
+          break;
+
+        case "/api/entries":
+          response =
+            request.method === "GET"
+              ? await listEntries(request, env)
+              : await createEntry(request, env);
+          break;
+
+        case "/api/moderation":
+          response = await moderation(request, env);
+          break;
+
+        case "/api/moderation/status":
+          response = await moderationStatusContract(request, env);
+          break;
+
+        default:
+          response = json({ ok: false, error: "Not found" }, 404);
+      }
+
+      return withCors(response, request, env);
+    } catch (error) {
+      console.error("API request failed", error);
+
+      return withCors(
+        json(
+          {
+            ok: false,
+            error: "The guestbook service is temporarily unavailable."
+          },
+          500
+        ),
+        request,
+        env
+      );
+    }
   }
 };
