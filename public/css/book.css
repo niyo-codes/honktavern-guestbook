@@ -195,8 +195,8 @@ button { cursor: pointer; }
   min-height: 0;
   padding: 0 0 .6%;
   margin: 0;
-  border: 1px solid rgba(74,53,38,.12);
-  border-radius: 7px;
+  border: 1px solid rgba(120, 90, 60, .12);
+  border-radius: 5px;
   background: rgba(255, 250, 232, .46);
   overflow: hidden;
 }
@@ -227,23 +227,22 @@ button { cursor: pointer; }
   margin: .32em 0 0;
   padding: .25em .45em .32em;
   font-family: var(--book-text-font);
-  font-size: var(--message-font-size, var(--book-text-size));
+  font-size: var(--message-font-size, calc(var(--book-text-size) * .8));
   line-height: var(--book-text-line);
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-break: normal;
   text-wrap: pretty;
   overflow: hidden;
-  border-radius: 4px;
 }
 .entry-message--compact {
-  --message-font-size: clamp(.82rem, 1.6cqw, 1.05rem);
+  --message-font-size: clamp(.72rem, 1.28cqw, .84rem);
 }
 .entry-message--dense {
-  --message-font-size: clamp(.76rem, 1.4cqw, .95rem);
+  --message-font-size: clamp(.68rem, 1.12cqw, .76rem);
 }
 .entry-message--very-dense {
-  --message-font-size: clamp(.7rem, 1.2cqw, .88rem);
+  --message-font-size: clamp(.64rem, .96cqw, .704rem);
 }
 .entry-admin {
   position: absolute;
