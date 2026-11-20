@@ -21,13 +21,15 @@ const likeButton = $("like-button");
 const likeHeart = $("like-heart");
 const likeCount = $("like-count");
 
+let moderationView = false;
+
 const book = new GuestbookBook({
   entries,
   status,
   previousButton: $("previous-page"),
   nextButton: $("next-page"),
   pageIndicator: $("page-indicator"),
-  api: listEntries,
+  api: (cursor) => listEntries(cursor, moderationView),
   onAdminAction: null
 });
 
@@ -134,6 +136,14 @@ $("greeting-form").addEventListener("submit", async (event) => {
   }
 });
 
+$("toggle-moderation-view").addEventListener("click", async () => {
+  moderationView = !moderationView;
+  $("toggle-moderation-view").textContent = moderationView
+    ? "Show public messages"
+    : "Show hidden & deleted messages";
+  await book.start();
+});
+
 $("admin-logout").addEventListener("click", async () => {
   await adminLogout();
   adminAuthenticated = false;
@@ -141,6 +151,10 @@ $("admin-logout").addEventListener("click", async () => {
   book.renderCurrent();
   $("admin-tools-dialog").close();
 });
+
+if (new URLSearchParams(window.location.search).has("debug")) {
+  document.body.classList.add("debug-layout");
+}
 
 const configPromise = getConfig().catch(() => ({ turnstileSiteKey: "" }));
 
