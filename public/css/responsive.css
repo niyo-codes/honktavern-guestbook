@@ -6,7 +6,3 @@
     transition-duration: .01ms !important;
   }
 }
-
-@media (min-width: 1600px) {
-  .guestbook-shell { width: min(80vw, 1180px); }
-}
