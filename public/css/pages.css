@@ -1,15 +1,15 @@
 .entries {
-  min-height: 260px;
+  min-height: 160px;
 }
 
 .entry-skeleton {
-  padding: 18px 0;
+  padding: 12px 0;
   border-top: 1px solid var(--line);
 }
 
 .skeleton-line {
-  height: 12px;
-  margin: 8px 0;
+  height: 9px;
+  margin: 7px 0;
   border-radius: 5px;
   background: rgba(61,43,34,.10);
   animation: pulse 1.4s ease-in-out infinite;
@@ -23,15 +23,16 @@
 }
 
 .empty-state {
-  padding: 48px 12px;
+  padding: 42px 10px;
   text-align: center;
   color: var(--muted);
+  font-size: .84rem;
 }
 
 .retry-card {
-  padding: 20px;
+  padding: 15px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 9px;
   background: rgba(255,255,255,.28);
 }
 
