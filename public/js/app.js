@@ -7,6 +7,7 @@ import {
   adminLogout,
   updateGreeting,
   moderateEntry,
+  getModerationStatus,
   listEntries
 } from "./api/guestbook-api.js";
 import { GuestbookBook } from "./book/book.js";
@@ -31,6 +32,23 @@ const book = new GuestbookBook({
 });
 
 let adminAuthenticated = false;
+
+function enableAdminView() {
+  adminAuthenticated = true;
+  book.onAdminAction = async (entryId, action) => {
+    await moderateEntry(entryId, action);
+  };
+  book.renderCurrent();
+}
+
+async function restoreAdminSession() {
+  try {
+    const result = await getModerationStatus();
+    if (result.authenticated) enableAdminView();
+  } catch {
+    // A missing/expired admin session must never prevent the public book from loading.
+  }
+}
 
 async function refreshState() {
   const state = await getGuestbookState();
@@ -86,12 +104,8 @@ $("admin-login").addEventListener("click", async () => {
   statusEl.textContent = "";
   try {
     await adminLogin($("admin-password").value);
-    adminAuthenticated = true;
+    enableAdminView();
     $("admin-dialog").close();
-    book.onAdminAction = async (entryId, action) => {
-      await moderateEntry(entryId, action);
-    };
-    book.renderCurrent();
     openDialog($("admin-tools-dialog"));
   } catch (error) {
     statusEl.textContent = error.message;
@@ -145,7 +159,7 @@ setupSigningForm({
   getSiteKey: async () => (await configPromise).turnstileSiteKey
 });
 
-Promise.all([refreshState(), book.start()]).catch((error) => {
+Promise.all([refreshState(), book.start(), restoreAdminSession()]).catch((error) => {
   status.textContent = error.message;
   status.className = "entries-status status-error";
 });
