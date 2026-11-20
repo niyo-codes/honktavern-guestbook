@@ -55,11 +55,11 @@ button { cursor: pointer; }
   outline: 2px solid rgba(124,63,47,.35);
   outline-offset: 2px;
 }
-.hotspot--pencil { left: 43.4%; top: 10.7%; width: 3.5%; aspect-ratio: 1; }
-.hotspot--settings { left: 46.5%; top: 10.7%; width: 3.5%; aspect-ratio: 1; }
+.hotspot--pencil { left: 40.8%; top: 9.6%; width: 3.8%; aspect-ratio: 1; }
+.hotspot--settings { left: 44.2%; top: 9.6%; width: 3.8%; aspect-ratio: 1; }
 .hotspot--add-message {
-  left: 39.8%;
-  top: 69.2%;
+  left: 40.8%;
+  top: 70.4%;
   width: 4.8%;
   aspect-ratio: 1;
 }
@@ -95,9 +95,9 @@ button { cursor: pointer; }
   position: absolute;
   z-index: 5;
   left: 30.5%;
-  top: 55.5%;
+  top: 54.8%;
   width: 17.5%;
-  height: 8.5%;
+  height: 6.8%;
   display: grid;
   place-items: center;
 }
@@ -136,7 +136,7 @@ button { cursor: pointer; }
   top: 14.2%;
   width: 42.5%;
   height: 69%;
-  padding: 5.3% 4.1% 2.8%;
+  padding: 10% 4.1% 2.8%;
   overflow: hidden;
 }
 .entries {
@@ -293,12 +293,12 @@ button { cursor: pointer; }
 @media (max-width: 639px) {
   .guestbook-shell { width: 100%; padding: 0; }
   .book-widget { border-radius: 0; box-shadow: none; }
-  .hotspot--pencil { left: 43.4%; top: 10.7%; width: 4.5%; }
-  .hotspot--settings { left: 47%; top: 10.7%; width: 4.5%; }
-  .hotspot--add-message { left: 39.8%; top: 69.2%; width: 5.8%; }
+  .hotspot--pencil { left: 40.8%; top: 9.6%; width: 4.5%; }
+  .hotspot--settings { left: 44.2%; top: 9.6%; width: 4.5%; }
+  .hotspot--add-message { left: 40.8%; top: 70.4%; width: 5.8%; }
   .greeting-overlay { left: 12.5%; top: 23%; width: 35%; height: 27%; }
   .likes-overlay { left: 30.5%; top: 55.5%; width: 17.5%; height: 8.5%; }
-  .entries-overlay { left: 52.5%; top: 14.2%; width: 42.5%; height: 69%; padding: 5.3% 4.1% 2.8%; }
+  .entries-overlay { left: 52.5%; top: 14.2%; width: 42.5%; height: 69%; padding: 10% 4.1% 2.8%; }
 }
 
 @media (min-width: 1600px) {
