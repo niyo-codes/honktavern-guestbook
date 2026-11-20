@@ -1,4 +1,4 @@
-import { listEntries, submitEntry } from "./api/guestbook-api.js";
+import { getConfig, listEntries, submitEntry } from "./api/guestbook-api.js";
 import { showEntrySkeleton } from "./components/loading.js";
 import { GuestbookBook } from "./book/book.js";
 import { setupSigningForm } from "./signing/form.js";
@@ -25,11 +25,15 @@ refreshButton.addEventListener("click", () => {
   book.load({ reset: true }).catch(() => {});
 });
 
+const configPromise = getConfig().catch(() => ({ turnstileSiteKey: "" }));
+
 setupSigningForm({
   form: document.getElementById("sign-form"),
   status: document.getElementById("form-status"),
   submitButton: document.getElementById("submit-button"),
   characterCount: document.getElementById("character-count"),
-  api: submitEntry
+  api: submitEntry,
+  getSiteKey: async () => (await configPromise).turnstileSiteKey
 });
+
 book.load({ reset: true }).catch(() => {});
