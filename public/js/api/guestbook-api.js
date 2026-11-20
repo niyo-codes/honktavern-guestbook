@@ -1,9 +1,9 @@
-const API_BASE = "/api";
+const API_BASE = new URL("/api", import.meta.url).href.replace(/\/$/, "");
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
-    credentials: "same-origin",
+    credentials: "include",
     headers: {
       Accept: "application/json",
       ...(options.body ? { "Content-Type": "application/json" } : {}),
