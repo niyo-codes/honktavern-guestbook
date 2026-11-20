@@ -1,0 +1,110 @@
+<div id="honk-tavern-guestbook" class="honk-tavern-guestbook">
+<main class="guestbook-shell">
+    <section class="orientation-warning" id="orientation-warning" aria-live="polite">
+      <div class="orientation-warning__icon" aria-hidden="true">↻</div>
+      <h2>Turn your phone sideways</h2>
+      <p>The Message Book is designed as a wide two-page book. Rotate your phone to landscape so the whole book stays visible.</p>
+    </section>
+
+    <section class="book-widget" id="guestbook" aria-labelledby="book-title">
+      <h1 id="book-title" class="sr-only">Honk Tavern Message Book</h1>
+      <div class="book-skin" aria-hidden="true"></div>
+
+      <button class="hotspot hotspot--pencil" id="admin-pencil" type="button"
+        aria-label="Edit the Tavern greeting"></button>
+      <button class="hotspot hotspot--settings" id="admin-settings" type="button"
+        aria-label="Open Tavern administration"></button>
+
+      <section class="greeting-overlay" aria-labelledby="greeting-title">
+        <h2 id="greeting-title" class="sr-only">Tavern greeting</h2>
+        <p id="greeting-text"></p>
+        <time id="greeting-date"></time>
+      </section>
+
+      <section class="likes-overlay" aria-labelledby="likes-title">
+        <h2 id="likes-title" class="sr-only">Total Likes</h2>
+        <strong id="like-count" class="like-count" aria-live="polite">0</strong>
+      </section>
+      <button class="hotspot hotspot--like" id="like-button" type="button"
+        aria-describedby="like-status" aria-label="Like the guestbook" aria-pressed="false">
+        <span id="like-heart" aria-hidden="true">♥</span>
+      </button>
+      <p id="like-status" class="sr-only" role="status" aria-live="polite"></p>
+
+      <section class="entries-overlay" aria-labelledby="entries-title">
+        <h2 id="entries-title" class="sr-only">Guest messages</h2>
+        <div class="entries" id="entries" role="list" aria-live="polite"></div>
+        <p class="entries-status" id="entries-status" role="status" aria-live="polite"></p>
+        <nav class="entry-navigation" aria-label="Guestbook pages">
+          <button class="page-button" id="previous-page" type="button" disabled aria-label="Previous page">‹</button>
+          <span id="page-indicator" aria-live="polite">1</span>
+          <button class="page-button" id="next-page" type="button" aria-label="Next page">›</button>
+        </nav>
+      </section>
+
+      <button class="hotspot hotspot--add-message" id="add-message" type="button"
+        aria-label="Add a message to the book"></button>
+
+      <dialog class="letter-dialog" id="message-dialog" aria-labelledby="message-dialog-title">
+        <form method="dialog" class="letter-panel" id="message-form" novalidate>
+          <button class="dialog-close" value="cancel" type="submit" aria-label="Close message form">×</button>
+          <p class="page-label">A fresh page</p>
+          <h2 id="message-dialog-title">Leave a message</h2>
+          <label for="name">Character name &amp; Home World</label>
+          <input id="name" name="name" autocomplete="name" maxlength="100"
+            placeholder="Nonyio Niyo @ Raiden"
+            pattern="^.+\s@\s[A-Za-z]+$"
+            title="Enter your character name followed by @ and your FFXIV Home World."
+            aria-describedby="identity-help"
+            required>
+          <p class="field-help" id="identity-help">Use <strong>Character Name @ World</strong>. Your World is checked against the current FFXIV World list.</p>
+          <label for="message">Message</label>
+          <textarea id="message" name="message" maxlength="350" required></textarea>
+          <div class="character-count" id="character-count" aria-live="polite">0 / 350</div>
+          <div class="honeypot" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="turnstile-slot" id="turnstile-slot" aria-label="Spam protection"></div>
+          <button class="letter-submit" id="submit-button" value="submit" type="submit">Add to the book</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </dialog>
+
+      <dialog class="admin-dialog" id="admin-dialog" aria-labelledby="admin-title">
+        <form method="dialog" class="admin-panel">
+          <button class="dialog-close" value="cancel" type="submit" aria-label="Close administration login">×</button>
+          <p class="page-label">Restricted area</p>
+          <h2 id="admin-title">Tavern administration</h2>
+          <label for="admin-password">Admin password</label>
+          <input id="admin-password" type="password" autocomplete="current-password">
+          <button class="letter-submit" id="admin-login" value="submit" type="button">Enter</button>
+          <p class="form-status" id="admin-status" role="status" aria-live="polite"></p>
+        </form>
+      </dialog>
+
+      <dialog class="admin-dialog" id="admin-tools-dialog" aria-labelledby="admin-tools-title">
+        <form method="dialog" class="admin-panel">
+          <button class="dialog-close" value="cancel" type="submit" aria-label="Close administration controls">×</button>
+          <p class="page-label">Tavern administration</p>
+          <h2 id="admin-tools-title">Admin controls</h2>
+          <button class="admin-tool" id="edit-greeting" type="button">Edit Greeting / Message of the Day</button>
+          <button class="admin-tool" id="toggle-moderation-view" type="button">Show hidden &amp; deleted messages</button>
+          <button class="admin-tool" id="admin-logout" type="button">Sign out</button>
+        </form>
+      </dialog>
+
+      <dialog class="letter-dialog" id="greeting-dialog" aria-labelledby="greeting-dialog-title">
+        <form method="dialog" class="letter-panel" id="greeting-form" novalidate>
+          <button class="dialog-close" value="cancel" type="submit" aria-label="Close greeting editor">×</button>
+          <p class="page-label">Tavern notice</p>
+          <h2 id="greeting-dialog-title">Greeting / Message of the Day</h2>
+          <label class="sr-only" for="greeting-input">Greeting text</label>
+          <textarea id="greeting-input" maxlength="1000"></textarea>
+          <button class="letter-submit" type="submit" value="save">Save Greeting</button>
+          <p class="form-status" id="greeting-status" role="status" aria-live="polite"></p>
+        </form>
+      </dialog>
+    </section>
+  </main>
+</div>
