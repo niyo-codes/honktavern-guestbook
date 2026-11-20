@@ -40,17 +40,6 @@ async function openDialog(dialog) {
   if (typeof dialog.showModal === "function") dialog.showModal();
 }
 
-async function requireAdminUi(afterLogin) {
-  if (adminAuthenticated) {
-    afterLogin();
-    return;
-  }
-  $("admin-status").textContent = "";
-  $("admin-password").value = "";
-  await openDialog($("admin-dialog"));
-  $("admin-after-login").value = afterLogin.name || "";
-}
-
 $("add-message").addEventListener("click", () => openDialog($("message-dialog")));
 $("like-button").addEventListener("click", async () => {
   const button = $("like-button");
