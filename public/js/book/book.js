@@ -11,6 +11,9 @@ export class GuestbookBook {
     this.cursors = [null];
     this.pageIndex = 0;
     this.loading = false;
+    this.resizeObserver = typeof ResizeObserver === "function"
+      ? new ResizeObserver(() => this.solveMessageOverflow())
+      : null;
   }
 
   async start() {
@@ -78,6 +81,11 @@ export class GuestbookBook {
     }
 
     this.status.textContent = "";
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver.observe(this.entries);
+    }
+    this.solveMessageOverflow();
     this.pageIndicator.textContent = String(this.pageIndex + 1);
     this.previousButton.disabled = this.pageIndex === 0;
     this.nextButton.disabled = !page?.nextCursor && !this.pages[this.pageIndex + 1];
@@ -153,5 +161,19 @@ export class GuestbookBook {
     }
 
     return article;
+  }
+
+  normalizeMessageText(value) {
+    return String(value ?? "").replace(/\\n/g, "\n");
+  }
+
+  solveMessageOverflow() {
+    const messages = this.entries.querySelectorAll(".entry-message");
+    messages.forEach((message) => {
+      message.classList.remove("entry-message--overflow");
+      if (message.scrollWidth > message.clientWidth + 1 || message.scrollHeight > message.clientHeight + 1) {
+        message.classList.add("entry-message--overflow");
+      }
+    });
   }
 }
