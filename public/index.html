@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Leave a note at the Honk Tavern guestbook.">
+  <title>Honk Tavern Guestbook</title>
+  <link rel="stylesheet" href="/css/book.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <main class="guestbook-shell" id="guestbook">
+    <header class="book-header">
+      <p class="eyebrow">HONK TAVERN</p>
+      <h1>The Guestbook</h1>
+      <p class="subtitle">A little place for anime sillies to leave a little note.</p>
+    </header>
+
+    <section class="book" aria-label="Honk Tavern guestbook">
+      <section class="book-page book-page--sign" aria-labelledby="sign-title">
+        <div class="page-content">
+          <p class="page-label">LEFT PAGE</p>
+          <h2 id="sign-title">Leave a note</h2>
+          <p class="page-intro">Add your name and a small message for the Tavern.</p>
+
+          <form id="sign-form" novalidate>
+            <label for="name">Name</label>
+            <input id="name" name="name" autocomplete="name" maxlength="100" required>
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" maxlength="350" required></textarea>
+            <div class="character-count" id="character-count">0 / 350</div>
+
+            <div class="honeypot" aria-hidden="true">
+              <label for="website">Website</label>
+              <input id="website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="turnstile-slot" id="turnstile-slot" aria-live="polite">
+              <p class="muted">Verification will load when you are ready to sign.</p>
+            </div>
+
+            <button type="submit" id="submit-button">Sign the book</button>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="book-page book-page--read" aria-labelledby="read-title">
+        <div class="page-content">
+          <p class="page-label">RIGHT PAGE</p>
+          <div class="reading-heading">
+            <div>
+              <h2 id="read-title">Recent notes</h2>
+              <p class="page-intro">The latest messages left at the Tavern.</p>
+            </div>
+            <button class="button-secondary" id="refresh-button" type="button">Refresh</button>
+          </div>
+
+          <div class="entries-status" id="entries-status" role="status" aria-live="polite">
+            Loading the guestbook…
+          </div>
+
+          <div class="entries" id="entries" aria-live="polite"></div>
+
+          <button class="load-more" id="load-more" type="button" hidden>
+            Load older notes
+          </button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

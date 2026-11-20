@@ -1,0 +1,24 @@
+name = "honktavern-guestbook"
+main = "src/worker/index.ts"
+compatibility_date = "2026-11-19"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "REPLACE_WITH_D1_DATABASE_NAME"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+migrations_dir = "./migrations"
+
+[vars]
+ALLOWED_ORIGIN = "https://YOUR-PRODUCTION-DOMAIN"
+TURNSTILE_SITE_KEY = "REPLACE_WITH_TURNSTILE_SITE_KEY"
+RATE_LIMIT_SECONDS = "5"
+DAILY_ENTRY_LIMIT = "1"
+
+# Secrets:
+# wrangler secret put TURNSTILE_SECRET
+# wrangler secret put FINGERPRINT_SALT
