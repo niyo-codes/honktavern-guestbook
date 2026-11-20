@@ -1,0 +1,30 @@
+@media (max-width: 800px) {
+  .guestbook-shell {
+    width: min(680px, calc(100% - 18px));
+    padding-top: 18px;
+  }
+
+  .book {
+    grid-template-columns: 1fr;
+  }
+
+  .book-page {
+    min-height: auto;
+  }
+
+  .book-page--sign {
+    border-right: 0;
+    border-bottom: 1px solid rgba(61,43,34,.25);
+  }
+
+  .book-page--read {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-content { padding: 24px 20px; }
+  .reading-heading { align-items: stretch; flex-direction: column; }
+  .button-secondary { align-self: flex-start; }
+  textarea { min-height: 130px; }
+}
