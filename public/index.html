@@ -11,64 +11,75 @@
 </head>
 <body>
   <main class="guestbook-shell" id="guestbook">
-    <header class="book-header">
-      <p class="eyebrow">HONK TAVERN</p>
-      <h1>The Guestbook</h1>
-      <p class="subtitle">A little place for anime sillies to leave a little note.</p>
-    </header>
-
-    <section class="book" aria-label="Honk Tavern guestbook">
-      <section class="book-page book-page--sign" aria-labelledby="sign-title">
-        <div class="page-content">
-          <p class="page-label">LEFT PAGE</p>
-          <h2 id="sign-title">Leave a note</h2>
-          <p class="page-intro">Add your name and a small message for the Tavern.</p>
-
-          <form id="sign-form" novalidate>
-            <label for="name">Name</label>
-            <input id="name" name="name" autocomplete="name" maxlength="100" required>
-
-            <label for="message">Message</label>
-            <textarea id="message" name="message" maxlength="350" required></textarea>
-            <div class="character-count" id="character-count">0 / 350</div>
-
-            <div class="honeypot" aria-hidden="true">
-              <label for="website">Website</label>
-              <input id="website" name="website" tabindex="-1" autocomplete="off">
-            </div>
-
-            <div class="turnstile-slot" id="turnstile-slot" aria-live="polite">
-              <p class="muted">Verification will load when you are ready to sign.</p>
-            </div>
-
-            <button type="submit" id="submit-button">Sign the book</button>
-            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-          </form>
-        </div>
-      </section>
-
-      <section class="book-page book-page--read" aria-labelledby="read-title">
-        <div class="page-content">
-          <p class="page-label">RIGHT PAGE</p>
-          <div class="reading-heading">
-            <div>
-              <h2 id="read-title">Recent notes</h2>
-              <p class="page-intro">The latest messages left at the Tavern.</p>
-            </div>
-            <button class="button-secondary" id="refresh-button" type="button">Refresh</button>
+    <section class="book-widget" aria-label="Honk Tavern guestbook">
+      <header class="widget-bar">
+        <div class="brand-lockup">
+          <span class="brand-mark" aria-hidden="true">✦</span>
+          <div>
+            <p class="eyebrow">HONK TAVERN</p>
+            <h1>The Guestbook</h1>
           </div>
-
-          <div class="entries-status" id="entries-status" role="status" aria-live="polite">
-            Loading the guestbook…
-          </div>
-
-          <div class="entries" id="entries" aria-live="polite"></div>
-
-          <button class="load-more" id="load-more" type="button" hidden>
-            Load older notes
-          </button>
         </div>
-      </section>
+        <p class="widget-note">Leave a little hello.</p>
+      </header>
+
+      <nav class="mobile-tabs" aria-label="Guestbook sections">
+        <button class="mobile-tab is-active" type="button" data-page-target="read-page" aria-controls="read-page" aria-selected="true">Read</button>
+        <button class="mobile-tab" type="button" data-page-target="sign-page" aria-controls="sign-page" aria-selected="false">Sign</button>
+      </nav>
+
+      <div class="book">
+        <section class="book-page book-page--sign" id="sign-page" aria-labelledby="sign-title">
+          <div class="page-content">
+            <p class="page-label">Leave a note</p>
+            <h2 id="sign-title">Pull up a chair.</h2>
+            <p class="page-intro">Add your name and a small message for the Tavern.</p>
+
+            <form id="sign-form" novalidate>
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" maxlength="100" required>
+
+              <label for="message">Message</label>
+              <textarea id="message" name="message" maxlength="350" required></textarea>
+              <div class="character-count" id="character-count">0 / 350</div>
+
+              <div class="honeypot" aria-hidden="true">
+                <label for="website">Website</label>
+                <input id="website" name="website" tabindex="-1" autocomplete="off">
+              </div>
+
+              <div class="turnstile-slot" id="turnstile-slot" aria-live="polite">
+                <p class="muted">Verification appears when you start writing.</p>
+              </div>
+
+              <button type="submit" id="submit-button">Sign the book</button>
+              <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+
+        <section class="book-page book-page--read is-active" id="read-page" aria-labelledby="read-title">
+          <div class="page-content">
+            <div class="reading-heading">
+              <div>
+                <p class="page-label">The latest pages</p>
+                <h2 id="read-title">Recent notes</h2>
+              </div>
+              <button class="button-secondary" id="refresh-button" type="button" aria-label="Refresh recent notes">↻</button>
+            </div>
+
+            <div class="entries-status" id="entries-status" role="status" aria-live="polite">
+              Loading the guestbook…
+            </div>
+
+            <div class="entries" id="entries" aria-live="polite"></div>
+
+            <button class="load-more" id="load-more" type="button" hidden>
+              Load older notes
+            </button>
+          </div>
+        </section>
+      </div>
     </section>
   </main>
 
