@@ -64,6 +64,10 @@ export function updateGreeting(greeting) {
   });
 }
 
+export function getModerationStatus() {
+  return request("/moderation/status");
+}
+
 export function moderateEntry(entryId, action) {
   return request("/moderation", {
     method: "POST",
