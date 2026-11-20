@@ -33,8 +33,9 @@ export function likeGuestbook() {
   return request("/likes", { method: "POST" });
 }
 
-export function listEntries(cursor = null) {
+export function listEntries(cursor = null, moderation = false) {
   const params = new URLSearchParams({ limit: "5" });
+  if (moderation) params.set("moderation", "all");
   if (cursor) params.set("cursor", cursor);
   return request(`/entries?${params}`);
 }
