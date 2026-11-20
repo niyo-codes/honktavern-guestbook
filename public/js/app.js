@@ -13,7 +13,8 @@ import {
 import { GuestbookBook } from "./book/book.js";
 import { setupSigningForm } from "./signing/form.js";
 
-const $ = (id) => document.getElementById(id);
+const root = document.getElementById("honk-tavern-guestbook") || document;
+const $ = (id) => root.querySelector("#" + id);
 
 const entries = $("entries");
 const status = $("entries-status");
@@ -153,7 +154,7 @@ $("admin-logout").addEventListener("click", async () => {
 });
 
 if (new URLSearchParams(window.location.search).has("debug")) {
-  document.body.classList.add("debug-layout");
+  root.classList.add("debug-layout");
 }
 
 const configPromise = getConfig().catch(() => ({ turnstileSiteKey: "" }));
