@@ -42,20 +42,16 @@ export default {
 
         if (url.pathname === "/api/health" && request.method === "GET") {
           response = await health();
-        } else if (
-          url.pathname === "/api/health/db" &&
-          request.method === "GET"
-        ) {
+        } else if (url.pathname === "/api/health/db" && request.method === "GET") {
           response = await databaseHealth(env);
-        } else if (
-          url.pathname === "/api/entries" &&
-          request.method === "GET"
-        ) {
+        } else if (url.pathname === "/api/config" && request.method === "GET") {
+          response = Response.json({
+            ok: true,
+            turnstileSiteKey: env.TURNSTILE_SITE_KEY
+          });
+        } else if (url.pathname === "/api/entries" && request.method === "GET") {
           response = await listEntries(request, env);
-        } else if (
-          url.pathname === "/api/entries" &&
-          request.method === "POST"
-        ) {
+        } else if (url.pathname === "/api/entries" && request.method === "POST") {
           response = await createEntry(request, env);
         } else {
           response = Response.json(
