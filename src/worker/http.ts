@@ -14,12 +14,25 @@ export function methodNotAllowed(allow: string): Response {
   return response;
 }
 
+function allowedOrigins(env: Env): string[] {
+  return String(env.ALLOWED_ORIGIN ?? "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
+
+export function isAllowedOrigin(request: Request, env: Env): boolean {
+  const origin = request.headers.get("Origin");
+  return !origin || allowedOrigins(env).includes(origin);
+}
+
 export function corsHeaders(request: Request, env: Env): Headers {
   const headers = new Headers();
   const origin = request.headers.get("Origin");
 
-  if (origin && origin === env.ALLOWED_ORIGIN) {
+  if (origin && allowedOrigins(env).includes(origin)) {
     headers.set("Access-Control-Allow-Origin", origin);
+    headers.set("Access-Control-Allow-Credentials", "true");
     headers.set("Vary", "Origin");
   }
 
