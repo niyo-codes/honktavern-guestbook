@@ -1,3 +1,5 @@
+const RATE_LIMIT_EVENT_TYPES = ["submission_attempt", "turnstile_failed"] as const;
+
 export async function isRateLimited(
   db: D1Database,
   fingerprintHash: string,
@@ -11,10 +13,15 @@ export async function isRateLimited(
        FROM abuse_events
        WHERE fingerprint_hash = ?1
          AND created_at >= ?2
-         AND event_type = 'submission_attempt'
+         AND event_type IN (?3, ?4)
        LIMIT 1`
     )
-    .bind(fingerprintHash, cutoff)
+    .bind(
+      fingerprintHash,
+      cutoff,
+      RATE_LIMIT_EVENT_TYPES[0],
+      RATE_LIMIT_EVENT_TYPES[1]
+    )
     .first();
 
   return Boolean(row);
