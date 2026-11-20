@@ -167,8 +167,8 @@ button { cursor: pointer; }
 .entries-overlay {
   position: absolute;
   z-index: 6;
-  left: 52.4%;
-  top: 11.1%;
+  left: 53.4%;
+  top: 11%;
   width: 34.9%;
   height: 79.4%;
   padding: .7% 1.4% 1.8%;
@@ -214,6 +214,8 @@ button { cursor: pointer; }
   font-size: clamp(.9rem, 1.8cqw, 1.2rem);
   line-height: 1.45;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
   overflow: hidden;
 }
 .entry-admin {
