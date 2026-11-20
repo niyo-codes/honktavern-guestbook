@@ -12,15 +12,17 @@
 <body>
   <main class="guestbook-shell" id="guestbook">
     <section class="book-widget" aria-label="Honk Tavern guestbook">
+      <div class="book-skin" aria-hidden="true"></div>
+
       <header class="widget-bar">
         <div class="brand-lockup">
           <span class="brand-mark" aria-hidden="true">✦</span>
           <div>
             <p class="eyebrow">HONK TAVERN</p>
-            <h1>The Guestbook</h1>
+            <h1>The Message Book</h1>
           </div>
         </div>
-        <p class="widget-note">Leave a little hello.</p>
+        <button class="admin-trigger" id="admin-trigger" type="button" aria-label="Open administration" title="Administration">⚙</button>
       </header>
 
       <nav class="mobile-tabs" aria-label="Guestbook sections">
@@ -28,7 +30,7 @@
         <button class="mobile-tab" type="button" data-page-target="sign-page" aria-controls="sign-page" aria-selected="false">Sign</button>
       </nav>
 
-      <div class="book">
+      <div class="book-overlay">
         <section class="book-page book-page--sign" id="sign-page" aria-labelledby="sign-title">
           <div class="page-content">
             <p class="page-label">Leave a note</p>
@@ -80,6 +82,19 @@
           </div>
         </section>
       </div>
+
+      <dialog class="admin-dialog" id="admin-dialog" aria-labelledby="admin-title">
+        <form method="dialog" class="admin-panel">
+          <button class="admin-close" value="cancel" type="submit" aria-label="Close administration">×</button>
+          <p class="page-label">Restricted area</p>
+          <h2 id="admin-title">Tavern administration</h2>
+          <p class="page-intro">Moderation controls are intentionally kept outside the public book surface.</p>
+          <label for="admin-password">Password</label>
+          <input id="admin-password" type="password" autocomplete="current-password">
+          <button class="admin-login" type="button" id="admin-login">Enter</button>
+          <p class="form-status" id="admin-status" role="status" aria-live="polite"></p>
+        </form>
+      </dialog>
     </section>
   </main>
 
