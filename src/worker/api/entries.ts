@@ -129,24 +129,26 @@ export async function createEntry(request: Request, env: Env): Promise<Response>
     return errorResponse("Verification failed. Please try again.", 400);
   }
 
-  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
-  const dailyCount = await env.DB
-    .prepare(
-      `SELECT COUNT(*) AS count
-       FROM entries
-       WHERE fingerprint_hash = ?1
-         AND created_at >= ?2
-         AND moderation_status != 'deleted'`
-    )
-    .bind(fingerprint, cutoff)
-    .first<{ count: number }>();
+  if (config.dailyEntryLimit > 0) {
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    const dailyCount = await env.DB
+      .prepare(
+        `SELECT COUNT(*) AS count
+         FROM entries
+         WHERE fingerprint_hash = ?1
+           AND created_at >= ?2
+           AND moderation_status != 'deleted'`
+      )
+      .bind(fingerprint, cutoff)
+      .first<{ count: number }>();
 
-  if (Number(dailyCount?.count ?? 0) >= config.dailyEntryLimit) {
-    await recordAbuseEvent(env.DB, "daily_limit", fingerprint);
-    return errorResponse(
-      "You've already signed the guestbook today. Come back tomorrow!",
-      429
-    );
+    if (Number(dailyCount?.count ?? 0) >= config.dailyEntryLimit) {
+      await recordAbuseEvent(env.DB, "daily_limit", fingerprint);
+      return errorResponse(
+        "You've already signed the guestbook today. Come back tomorrow!",
+        429
+      );
+    }
   }
 
   const now = Date.now();
