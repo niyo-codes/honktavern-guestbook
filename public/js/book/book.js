@@ -1,48 +1,93 @@
-import { CursorPager } from "./pagination.js";
-import { requestPageTurn } from "./page-turn.js";
-
 export class GuestbookBook {
-  constructor({ entries, status, loadMoreButton, api }) {
+  constructor({ entries, status, previousButton, nextButton, pageIndicator, api, onAdminAction }) {
     this.entries = entries;
     this.status = status;
-    this.loadMoreButton = loadMoreButton;
-    this.page = document.querySelector(".book-page--read");
-    this.pager = new CursorPager(api);
+    this.previousButton = previousButton;
+    this.nextButton = nextButton;
+    this.pageIndicator = pageIndicator;
+    this.api = api;
+    this.onAdminAction = onAdminAction;
+    this.pages = [];
+    this.cursors = [null];
+    this.pageIndex = 0;
+    this.loading = false;
   }
 
-  async load({ reset = false } = {}) {
-    if (reset) {
-      this.pager.reset();
-      this.entries.innerHTML = "";
+  async start() {
+    this.pages = [];
+    this.cursors = [null];
+    this.pageIndex = 0;
+    await this.loadPage(0);
+  }
+
+  async nextPage() {
+    if (this.loading) return;
+
+    const current = this.pages[this.pageIndex];
+    if (!current) return;
+
+    if (this.pages[this.pageIndex + 1]) {
+      this.pageIndex += 1;
+      this.renderCurrent();
+      return;
     }
 
-    this.status.textContent = "Loading the guestbook…";
+    if (!current.nextCursor) return;
+
+    this.cursors[this.pageIndex + 1] = current.nextCursor;
+    await this.loadPage(this.pageIndex + 1);
+  }
+
+  previousPage() {
+    if (this.pageIndex === 0 || this.loading) return;
+    this.pageIndex -= 1;
+    this.renderCurrent();
+  }
+
+  async loadPage(index) {
+    this.loading = true;
+    this.status.textContent = "Turning the page…";
     this.status.className = "entries-status";
 
     try {
-      const rows = await this.pager.next();
-
-      if (reset && rows?.length === 0) {
-        this.entries.innerHTML =
-          '<div class="empty-state">No notes yet. Be the first to leave one.</div>';
-      } else if (rows) {
-        rows.forEach((entry) => this.entries.appendChild(this.render(entry)));
-      }
-
-      this.status.textContent = "";
-      this.loadMoreButton.hidden = !this.pager.hasMore;
-      requestPageTurn(this.page);
+      const page = await this.api(this.cursors[index] ?? null);
+      this.pages[index] = page;
+      this.pageIndex = index;
+      this.renderCurrent();
     } catch (error) {
       this.status.textContent = error.message;
       this.status.className = "entries-status status-error";
-      this.loadMoreButton.hidden = true;
       throw error;
+    } finally {
+      this.loading = false;
     }
+  }
+
+  renderCurrent() {
+    const page = this.pages[this.pageIndex];
+    this.entries.replaceChildren();
+
+    if (!page || page.entries.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = this.pageIndex === 0
+        ? "No notes yet. Be the first to leave one."
+        : "No more notes.";
+      this.entries.appendChild(empty);
+    } else {
+      page.entries.forEach((entry) => this.entries.appendChild(this.render(entry)));
+    }
+
+    this.status.textContent = "";
+    this.pageIndicator.textContent = String(this.pageIndex + 1);
+    this.previousButton.disabled = this.pageIndex === 0;
+    this.nextButton.disabled = !page?.nextCursor && !this.pages[this.pageIndex + 1];
   }
 
   render(entry) {
     const article = document.createElement("article");
     article.className = "entry";
+    article.dataset.entryId = String(entry.id);
 
     const name = document.createElement("h3");
     name.className = "entry-name";
@@ -58,6 +103,36 @@ export class GuestbookBook {
     message.textContent = entry.message;
 
     article.append(name, date, message);
+
+    if (this.onAdminAction) {
+      const controls = document.createElement("div");
+      controls.className = "entry-admin";
+
+      for (const [action, label] of [["hide", "–"], ["delete", "×"]]) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = label;
+        button.title = action === "hide" ? "Hide message" : "Delete message";
+        button.addEventListener("click", async () => {
+          button.disabled = true;
+          try {
+            await this.onAdminAction(entry.id, action);
+            await this.start();
+          } finally {
+            button.disabled = false;
+          }
+        });
+        controls.appendChild(button);
+      }
+
+      article.appendChild(controls);
+    }
+
     return article;
+  }
+
+  setAdminMode(enabled) {
+    this.onAdminAction = enabled ? this.onAdminAction : null;
+    this.renderCurrent();
   }
 }

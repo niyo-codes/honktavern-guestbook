@@ -22,3 +22,5 @@ DAILY_ENTRY_LIMIT = "1"
 # Secrets:
 # wrangler secret put TURNSTILE_SECRET
 # wrangler secret put FINGERPRINT_SALT
+# wrangler secret put ADMIN_PASSWORD
+# wrangler secret put ADMIN_SESSION_SECRET

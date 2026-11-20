@@ -20,6 +20,8 @@ export interface Env {
   FINGERPRINT_SALT: string;
   TURNSTILE_SITE_KEY: string;
   ALLOWED_ORIGIN: string;
+  ADMIN_PASSWORD?: string;
+  ADMIN_SESSION_SECRET?: string;
   RATE_LIMIT_SECONDS?: string;
   DAILY_ENTRY_LIMIT?: string;
 }
