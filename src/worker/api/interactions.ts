@@ -1,6 +1,7 @@
 import type { Env } from "../types/guestbook";
 import { errorResponse, json, methodNotAllowed } from "../http";
 import { createIpFingerprint } from "../services/fingerprint";
+import { requireAdmin } from "./admin";
 
 function utcDay(): string {
   return new Date().toISOString().slice(0, 10);
@@ -66,6 +67,8 @@ export async function updateGreeting(
   env: Env
 ): Promise<Response> {
   if (request.method !== "PUT") return methodNotAllowed("PUT");
+  const denied = await requireAdmin(request, env);
+  if (denied) return denied;
 
   let body: { greeting?: unknown };
   try {
