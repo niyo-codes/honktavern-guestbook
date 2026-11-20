@@ -14,7 +14,7 @@ database_id = "de8148ab-34b7-467d-8225-393148c2b383"
 migrations_dir = "./migrations"
 
 [vars]
-ALLOWED_ORIGIN = "https://honktavern.crd.co,https://honktavern-guestbook.muddles.net.worker.dev"
+ALLOWED_ORIGIN = "https://honktavern.crd.co,https://honktavern-guestbook.muddles-net.workers.dev"
 TURNSTILE_SITE_KEY = "0x4AAAAAAC-Nngrukiqg-dqQ"
 RATE_LIMIT_SECONDS = "5"
 # Temporary sample-data mode: 0 disables only the 24-hour per-visitor entry gate.
