@@ -15,9 +15,39 @@ button, input, textarea { font: inherit; }
 button { cursor: pointer; }
 
 .guestbook-shell {
-  width: min(100%, 80vw, calc(80vh * 1670 / 941));
+  width: min(80vw, calc(80vh * 1670 / 941));
   margin: 0 auto;
   padding: 12px 0;
+}
+
+.orientation-warning {
+  display: none;
+  min-height: 55vh;
+  padding: 28px;
+  place-content: center;
+  text-align: center;
+  color: #4a3526;
+  background: rgba(247, 237, 217, .96);
+  border: 1px solid rgba(74, 53, 38, .18);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(48,31,24,.18);
+}
+
+.orientation-warning h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.2rem, 5vw, 1.7rem);
+}
+
+.orientation-warning p {
+  max-width: 32rem;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.orientation-warning__icon {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 12px;
 }
 
 .book-widget {
@@ -290,9 +320,19 @@ button { cursor: pointer; }
 .turnstile-slot { min-height: 65px; margin-top: 10px; }
 .honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
+@media (max-width: 900px) {
+  .guestbook-shell {
+    width: 100%;
+    padding: 0;
+  }
+
+  .book-widget {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
 @media (max-width: 639px) {
-  .guestbook-shell { width: 100%; padding: 0; }
-  .book-widget { border-radius: 0; box-shadow: none; }
   .hotspot--pencil { left: 40.8%; top: 9.6%; width: 4.5%; }
   .hotspot--settings { left: 44.2%; top: 9.6%; width: 4.5%; }
   .hotspot--add-message { left: 40.8%; top: 70.4%; width: 5.8%; }
@@ -303,4 +343,20 @@ button { cursor: pointer; }
 
 @media (min-width: 1600px) {
   .guestbook-shell { width: min(80vw, 1180px, calc(80vh * 1670 / 941)); }
+}
+
+
+@media (orientation: portrait) and (max-width: 699px) {
+  .guestbook-shell {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .orientation-warning {
+    display: grid;
+  }
+
+  .book-widget {
+    display: none;
+  }
 }
