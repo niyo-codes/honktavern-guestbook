@@ -17,7 +17,9 @@ migrations_dir = "./migrations"
 ALLOWED_ORIGIN = "https://honktavern-guestbook.muddles.net.worker.dev"
 TURNSTILE_SITE_KEY = "0x4AAAAAAC-Nngrukiqg-dqQ"
 RATE_LIMIT_SECONDS = "5"
-DAILY_ENTRY_LIMIT = "1"
+# Temporary sample-data mode: 0 disables only the 24-hour per-visitor entry gate.
+# Keep the short request/abuse rate limit enabled.
+DAILY_ENTRY_LIMIT = "0"
 
 # Secrets:
 # wrangler secret put TURNSTILE_SECRET
