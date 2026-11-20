@@ -11,21 +11,21 @@ async function request(path, options = {}) {
   });
 
   let payload = null;
-  try {
-    payload = await response.json();
-  } catch {
-    // Keep the original response status when the API is unavailable or malformed.
-  }
+  try { payload = await response.json(); } catch {}
 
   if (!response.ok) {
-    const message =
-      payload?.error || "The guestbook service is temporarily unavailable.";
-    const error = new Error(message);
+    const error = new Error(
+      payload?.error || "The guestbook service is temporarily unavailable."
+    );
     error.status = response.status;
     throw error;
   }
 
   return payload;
+}
+
+export function getConfig() {
+  return request("/config");
 }
 
 export function listEntries(cursor = null) {
@@ -39,8 +39,4 @@ export function submitEntry(payload) {
     method: "POST",
     body: JSON.stringify(payload)
   });
-}
-
-export function health() {
-  return request("/health");
 }
