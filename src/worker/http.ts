@@ -18,17 +18,37 @@ function allowedOrigins(env: Env): string[] {
   return String(env.ALLOWED_ORIGIN ?? "")
     .split(",")
     .map((origin) => origin.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((origin) => {
+      try {
+        return new URL(origin).origin;
+      } catch {
+        return origin.replace(/\/$/, "");
+      }
+    });
+}
+
+function requestOrigin(request: Request): string | null {
+  const origin = request.headers.get("Origin");
+  if (!origin) {
+    return null;
+  }
+
+  try {
+    return new URL(origin).origin;
+  } catch {
+    return origin;
+  }
 }
 
 export function isAllowedOrigin(request: Request, env: Env): boolean {
-  const origin = request.headers.get("Origin");
+  const origin = requestOrigin(request);
   return !origin || allowedOrigins(env).includes(origin);
 }
 
 export function corsHeaders(request: Request, env: Env): Headers {
   const headers = new Headers();
-  const origin = request.headers.get("Origin");
+  const origin = requestOrigin(request);
 
   if (origin && allowedOrigins(env).includes(origin)) {
     headers.set("Access-Control-Allow-Origin", origin);

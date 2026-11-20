@@ -29,6 +29,18 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
+    // CORS preflight must be handled before both API routing and static assets.
+    if (request.method === "OPTIONS") {
+      if (!isAllowedOrigin(request, env)) {
+        return new Response("Origin not allowed", { status: 403 });
+      }
+
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders(request, env)
+      });
+    }
+
     if (!url.pathname.startsWith("/api/")) {
       const assetResponse = await env.ASSETS.fetch(request);
       return withCors(assetResponse, request, env);
@@ -36,13 +48,6 @@ export default {
 
     if (!isAllowedOrigin(request, env)) {
       return new Response("Origin not allowed", { status: 403 });
-    }
-
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        status: 204,
-        headers: corsHeaders(request, env)
-      });
     }
 
     try {
