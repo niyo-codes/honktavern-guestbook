@@ -26,3 +26,16 @@ CREATE TABLE IF NOT EXISTS abuse_events (
 
 CREATE INDEX IF NOT EXISTS idx_abuse_events_fingerprint_created
   ON abuse_events (fingerprint_hash, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS moderation_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  entry_id INTEGER NOT NULL,
+  action TEXT NOT NULL,
+  actor TEXT,
+  created_at INTEGER NOT NULL,
+  metadata TEXT,
+  FOREIGN KEY (entry_id) REFERENCES entries(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_moderation_events_entry_created
+  ON moderation_events (entry_id, created_at DESC);
