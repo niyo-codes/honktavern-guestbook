@@ -13,20 +13,27 @@ export async function getGuestbookState(
 ): Promise<Response> {
   if (request.method !== "GET") return methodNotAllowed("GET");
 
-  const [settings, likes] = await Promise.all([
+  const fingerprint = await createIpFingerprint(request, env.FINGERPRINT_SALT);
+  const day = utcDay();
+
+  const [settings, likes, visitorLike] = await Promise.all([
     env.DB.prepare(
       "SELECT greeting, greeting_updated_at FROM guestbook_settings WHERE id = 1"
     ).first<{ greeting: string; greeting_updated_at: number | null }>(),
     env.DB.prepare(
       "SELECT COUNT(*) AS count FROM guestbook_likes"
-    ).first<{ count: number }>()
+    ).first<{ count: number }>(),
+    env.DB.prepare(
+      "SELECT 1 AS liked FROM guestbook_likes WHERE ip_fingerprint = ?1 AND like_day = ?2 LIMIT 1"
+    ).bind(fingerprint, day).first<{ liked: number }>()
   ]);
 
   return json({
     ok: true,
     greeting: settings?.greeting ?? "",
     greetingUpdatedAt: settings?.greeting_updated_at ?? null,
-    totalLikes: Number(likes?.count ?? 0)
+    totalLikes: Number(likes?.count ?? 0),
+    likedToday: Boolean(visitorLike?.liked)
   });
 }
 
