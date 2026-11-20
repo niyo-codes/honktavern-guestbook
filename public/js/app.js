@@ -53,3 +53,19 @@ function selectMobilePage(targetId) {
 mobileTabs.forEach((tab) => {
   tab.addEventListener("click", () => selectMobilePage(tab.dataset.pageTarget));
 });
+
+const adminDialog = document.getElementById("admin-dialog");
+const adminTrigger = document.getElementById("admin-trigger");
+const adminLogin = document.getElementById("admin-login");
+const adminStatus = document.getElementById("admin-status");
+
+adminTrigger.addEventListener("click", () => {
+  if (typeof adminDialog.showModal === "function") {
+    adminDialog.showModal();
+  }
+});
+
+adminLogin.addEventListener("click", () => {
+  adminStatus.textContent = "Administration is not enabled on this public build.";
+  adminStatus.className = "form-status";
+});
