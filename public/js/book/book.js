@@ -115,8 +115,17 @@ export class GuestbookBook {
     }
 
     const message = document.createElement("p");
+    const messageText = this.normalizeMessageText(entry.message);
+    const messageLength = messageText.length;
     message.className = "entry-message";
-    message.textContent = this.normalizeMessageText(entry.message);
+    if (messageLength > 320) {
+      message.classList.add("entry-message--very-dense");
+    } else if (messageLength > 220) {
+      message.classList.add("entry-message--dense");
+    } else if (messageLength > 120) {
+      message.classList.add("entry-message--compact");
+    }
+    message.textContent = messageText;
 
     article.append(name, date, message);
 
