@@ -99,6 +99,13 @@ export class GuestbookBook {
     date.dateTime = new Date(entry.created_at).toISOString();
     date.textContent = new Date(entry.created_at).toLocaleString();
 
+    if (entry.world) {
+      const world = document.createElement("span");
+      world.className = "entry-world";
+      world.textContent = "@ " + entry.world;
+      name.appendChild(world);
+    }
+
     const message = document.createElement("p");
     message.className = "entry-message";
     message.textContent = entry.message;
