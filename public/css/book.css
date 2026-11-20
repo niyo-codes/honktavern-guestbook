@@ -174,10 +174,10 @@ button { cursor: pointer; }
 .entries-overlay {
   position: absolute;
   z-index: 6;
-  left: 53.4%;
-  top: 11%;
-  width: 34.9%;
-  height: 79.4%;
+  left: 52.4%;
+  top: 8%;
+  width: 35.9%;
+  height: 83.4%;
   padding: .7% 1.4% 1.8%;
   overflow: hidden;
 }
